@@ -10,6 +10,10 @@
 
 A simple library to encode/decode URL parameters.
 
+This library was adapted from the [RIFE2 Web Application Framework](https://rife2.com).  
+A pure Java version can also be found at [https://github.com/gbevin/urlencoder](https://github.com/gbevin/urlencoder).
+
+
 For decades we've been using [java.net.URLEncoder](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URLEncoder.html) because of its improper naming. It is actually intended to encode HTML form parameters, not URLs.
 
 Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses this issue.
