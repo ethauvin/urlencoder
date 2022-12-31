@@ -90,7 +90,6 @@ object UrlEncoder {
                     // the remaining characters divided by the length of the encoding format %xx, is the maximum number
                     // of bytes that can be extracted
                     bytesBuffer = ByteArray((length - i) / 3)
-                    bytesPos = 0
                 }
                 i++
                 require(length >= i + 2) { "Illegal escape sequence" }
