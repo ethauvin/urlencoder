@@ -23,6 +23,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 
 
 class UrlEncoderTest {
@@ -53,10 +54,13 @@ class UrlEncoderTest {
     fun testEncode() {
         assertEquals("", encode(""))
         assertSame(same, encode(same))
+        assertSame(same, encode(same, ""))
+        assertTrue(encode("").isEmpty())
         validMap.forEach {
             assertEquals(it.value, encode(it.key))
         }
         assertEquals("?test=a%20test", encode("?test=a test", '=', '?'))
+        assertEquals("?test=a%20test", encode("?test=a test", "=?"))
         assertEquals("aaa", encode("aaa", 'a'))
     }
 }

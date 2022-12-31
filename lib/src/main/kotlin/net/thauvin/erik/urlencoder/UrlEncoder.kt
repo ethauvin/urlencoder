@@ -83,7 +83,7 @@ object UrlEncoder {
             ch = source[i]
             if (ch == '%') {
                 if (out == null) {
-                    out = StringBuilder(source.length)
+                    out = StringBuilder(length)
                     out.append(source, 0, i)
                 }
                 if (bytesBuffer == null) {
@@ -125,7 +125,7 @@ object UrlEncoder {
      * encoding. Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
      */
     @JvmStatic
-    fun encode(source: String, vararg allow: Char): String {
+    fun encode(source: String, allow: String): String {
         if (source.isBlank()) {
             return source
         }
@@ -135,7 +135,7 @@ object UrlEncoder {
         var i = 0
         while (i < source.length) {
             ch = source[i]
-            if (ch.isUnreserved() || allow.contains(ch)) {
+            if (ch.isUnreserved() || allow.indexOf(ch) != -1) {
                 out?.append(ch)
                 i++
             } else {
@@ -164,5 +164,14 @@ object UrlEncoder {
         }
 
         return out?.toString() ?: source
+    }
+
+    /**
+     * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
+     * encoding. Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
+     */
+    @JvmStatic
+    fun encode(source: String, vararg allow: Char): String {
+        return encode(source, String(allow))
     }
 }

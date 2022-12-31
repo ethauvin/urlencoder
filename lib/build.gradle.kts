@@ -108,7 +108,7 @@ tasks {
         archiveBaseName.set(rootProject.name)
     }
 
-    "sonarqube" {
+    "sonar" {
         dependsOn(koverReport)
     }
 }
