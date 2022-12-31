@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0x80</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0xFF</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$16</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$3</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$4</ID>
+    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic fun encode(source: String, vararg allow: Char): String</ID>
+  </CurrentIssues>
+</SmellBaseline>
