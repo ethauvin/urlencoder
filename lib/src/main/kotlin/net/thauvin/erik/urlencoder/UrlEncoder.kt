@@ -50,7 +50,7 @@ object UrlEncoder {
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     private fun Char.isUnreserved(): Boolean {
-        return if (this > '~') false else unreservedChars.get(this.code)
+        return this <= '~' && unreservedChars.get(code)
     }
 
     private fun StringBuilder.appendEncodedDigit(digit: Int) {
@@ -122,7 +122,7 @@ object UrlEncoder {
 
     /**
      * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
-     * encoding. Letters, numbers, unreserved (<code>"_-!.~'()*"</code>) and allowed characters are left intact.
+     * encoding. Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
      */
     @JvmStatic
     fun encode(source: String, vararg allow: Char): String {

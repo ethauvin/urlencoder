@@ -16,12 +16,12 @@ plugins {
     id("signing")
 }
 
-description = "URL parameters encoding and decoding"
+description = "Encode and decode URL parameters"
 group = "net.thauvin.erik"
 version = "0.9-SNAPSHOT"
 
 val deployDir = "deploy"
-val gitHub = "ethauvin/$name"
+val gitHub = "ethauvin/${rootProject.name}"
 val mavenUrl = "https://github.com/$gitHub"
 val publicationName = "mavenJava"
 
@@ -42,7 +42,8 @@ java {
 
 sonarqube {
     properties {
-        property("sonar.projectKey", "ethauvin_$name")
+        property("sonar.projectName", rootProject.name)
+        property("sonar.projectKey", "ethauvin_${rootProject.name}")
         property("sonar.organization", "ethauvin-github")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sourceEncoding", "UTF-8")
@@ -142,8 +143,8 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/$gitHub.git")
-                    developerConnection.set("scm:git:git@github.com:$gitHub.git")
+                    connection.set("scm:git://github.com/$gitHub.git")
+                    developerConnection.set("scm:git@github.com:$gitHub.git")
                     url.set(mavenUrl)
                 }
                 issueManagement {
