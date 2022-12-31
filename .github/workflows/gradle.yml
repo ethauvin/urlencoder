@@ -1,0 +1,61 @@
+name: gradle-ci
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
+      SONAR_JDK: "11"
+
+    strategy:
+      matrix:
+        java-version: [ 11, 17, 19 ]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Cache SonarCloud packages
+        if: matrix.java-version == env.SONAR_JDK
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ matrix.java-version }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ matrix.java-version }}-
+
+      - name: Test with Gradle
+        run: ./gradlew build check --stacktrace
+
+      - name: SonarCloud
+        if: success() && matrix.java-version == env.SONAR_JDK
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube
+
+      - name: Cleanup Gradle Cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
