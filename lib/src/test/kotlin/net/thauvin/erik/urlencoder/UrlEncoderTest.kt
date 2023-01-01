@@ -19,6 +19,8 @@ package net.thauvin.erik.urlencoder
 
 import net.thauvin.erik.urlencoder.UrlEncoder.decode
 import net.thauvin.erik.urlencoder.UrlEncoder.encode
+import net.thauvin.erik.urlencoder.UrlEncoder.processMain
+import net.thauvin.erik.urlencoder.UrlEncoder.usage
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -44,9 +46,10 @@ class UrlEncoderTest {
             assertEquals(it.key, decode(it.value))
         }
         invalid.forEach {
-            assertFailsWith(IllegalArgumentException::class) {
-                decode(it)
-            }
+            assertFailsWith<IllegalArgumentException>(
+                message = it,
+                block = { decode(it) }
+            )
         }
     }
 
@@ -62,5 +65,46 @@ class UrlEncoderTest {
         assertEquals("?test=a%20test", encode("?test=a test", '=', '?'))
         assertEquals("?test=a%20test", encode("?test=a test", "=?"))
         assertEquals("aaa", encode("aaa", 'a'))
+    }
+
+    @Test
+    fun testMainDecode() {
+        var result: UrlEncoder.MainResult
+        validMap.forEach {
+            result = processMain(arrayOf("-d", it.value))
+            assertEquals(result.output, it.key, it.key)
+            assertEquals(result.status, 0, it.key)
+        }
+    }
+
+    @Test
+    fun testMainEncode() {
+        var result: UrlEncoder.MainResult
+        validMap.forEach {
+            result = processMain(arrayOf("-e", it.key))
+            assertEquals(it.value, result.output, "-e ${it.key}")
+            assertEquals(0, result.status, "-e ${it.key}")
+
+            result = processMain(arrayOf(it.key))
+            assertEquals(it.value, result.output, it.value)
+            assertEquals(0, result.status, it.value)
+        }
+
+        invalid.forEach {
+            assertFailsWith<IllegalArgumentException>(
+                message = it,
+                block = { processMain(arrayOf("-d", it)) }
+            )
+        }
+    }
+
+    @Test
+    fun testMainUsage() {
+        var result: UrlEncoder.MainResult
+        for (arg in arrayOf("", " ", "-d", "-e")) {
+            result = processMain(arrayOf(arg))
+            assertEquals(usage, result.output, "processMain('$arg')")
+            assertEquals(1, result.status, "processMain('$arg')")
+        }
     }
 }

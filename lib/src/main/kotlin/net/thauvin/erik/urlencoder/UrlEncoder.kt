@@ -19,15 +19,22 @@ package net.thauvin.erik.urlencoder
 
 import java.nio.charset.StandardCharsets
 import java.util.BitSet
+import kotlin.system.exitProcess
 
 /**
  * URL parameters encoding and decoding.
+ *
+ * - Rules determined by [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#page-13),
  *
  * @author Geert Bevin (gbevin[remove] at uwyn dot com)
  * @author Erik C. Thauvin (erik@thauvin.net)
  */
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
+    internal val usage = """Usage : kotlin -cp urlencoder-*.jar ${UrlEncoder::class.java.name} [-ed] text
+Encode and decode URL parameters.
+  -e  encode (default)
+  -d  decode"""
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     private val unreservedChars = BitSet('~'.code + 1).apply {
@@ -103,7 +110,7 @@ object UrlEncoder {
                 }
             } else {
                 if (bytesBuffer != null) {
-                    out?.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+                    out!!.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
                     bytesBuffer = null
                     bytesPos = 0
                 }
@@ -121,7 +128,9 @@ object UrlEncoder {
 
     /**
      * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
-     * encoding. Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
+     * encoding.
+     *
+     * - Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
      */
     @JvmStatic
     fun encode(source: String, allow: String): String {
@@ -167,10 +176,50 @@ object UrlEncoder {
 
     /**
      * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
-     * encoding. Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
+     * encoding.
+     *
+     * - Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
      */
     @JvmStatic
     fun encode(source: String, vararg allow: Char): String {
         return encode(source, String(allow))
+    }
+
+    /**
+     * Encodes and decodes URLs from the command line.
+     *
+     * - `kotlin -cp urlencoder-*.jar net.thauvin.erik.urlencoder.UrlEncoder`
+     */
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val result = processMain(args)
+        if (result.status == 1) {
+            System.err.println(result.output)
+        } else {
+            println(result.output)
+        }
+        exitProcess(result.status)
+    }
+
+    internal data class MainResult(var output: String = usage, var status: Int = 1)
+
+    internal fun processMain(args: Array<String>): MainResult {
+        val result = MainResult()
+        if (args.isNotEmpty() && args[0].isNotBlank()) {
+            val hasDecode = args[0] == "-d"
+            val hasOption = hasDecode || args[0] == "-e"
+            if (!hasOption || args.size >= 2) {
+                val argsList = mutableListOf<String>()
+                argsList.addAll(args)
+                if (hasOption) argsList.removeAt(0)
+                if (hasDecode) {
+                    result.output = decode(argsList.joinToString(" "))
+                } else {
+                    result.output = encode(argsList.joinToString(" "))
+                }
+                result.status = 0
+            }
+        }
+        return result
     }
 }

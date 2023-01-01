@@ -4,9 +4,9 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("application")
     id("com.github.ben-manes.versions") version "0.44.0"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
-    id("java")
     id("java-library")
     id("maven-publish")
     id("org.jetbrains.dokka") version "1.7.20"
@@ -16,10 +16,11 @@ plugins {
     id("signing")
 }
 
-description = "Encode and decode URL parameters"
+description = "A simple library to encode/decode URL parameters"
 group = "net.thauvin.erik"
 version = "0.9-SNAPSHOT"
 
+val mavenName = "UrlEncoder"
 val deployDir = "deploy"
 val gitHub = "ethauvin/${rootProject.name}"
 val mavenUrl = "https://github.com/$gitHub"
@@ -34,10 +35,18 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+base {
+    archivesName.set(rootProject.name)
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
+}
+
+application {
+    mainClass.set("$group.${rootProject.name}.$mavenName")
 }
 
 sonarqube {
@@ -58,6 +67,12 @@ val javadocJar by tasks.creating(Jar::class) {
 }
 
 tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = "$group.${rootProject.name}.$mavenName"
+        }
+    }
+
     withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = java.targetCompatibility.toString()
     }
@@ -104,10 +119,6 @@ tasks {
         mustRunAfter(clean)
     }
 
-    jar {
-        archiveBaseName.set(rootProject.name)
-    }
-
     "sonar" {
         dependsOn(koverReport)
     }
@@ -120,7 +131,7 @@ publishing {
             artifactId = rootProject.name
             artifact(javadocJar)
             pom {
-                name.set(rootProject.name)
+                name.set(mavenName)
                 description.set(project.description)
                 url.set(mavenUrl)
                 licenses {

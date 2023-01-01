@@ -14,15 +14,20 @@ This library was adapted from the [RIFE2 Web Application Framework](https://rife
 A pure Java version can also be found at [https://github.com/gbevin/urlencoder](https://github.com/gbevin/urlencoder).
 
 
-For decades we've been using [java.net.URLEncoder](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URLEncoder.html) because of its improper naming. It is actually intended to encode HTML form parameters, not URLs.
+For decades we've been using [java.net.URLEncoder](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URLEncoder.html) because of its improper naming. It is actually intended to encode HTML form parameters, not URLs, causing the wrong escape sequences to be used.
 
-Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses this issue.
+Additionally, `java.net.URLEncoder` allocates memory even when no encoding is necessary, significantly impacting performance. This library has a negligible performance impact when the specified string doesn't need to be encoded.
+
+
+Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses these issues, but does not currently support [unicode surrogate pairs](https://learn.microsoft.com/en-us/globalization/encoding/surrogate-pairs).
 ## Examples (TL;DR)
 
 ```kotlin
+UrlEncoder.encode("a test &") // -> a%20test%20%26
 UrlEncoder.encode("%#okékÉȢ smile!😁") // -> %25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81
-UrlEncoder.encode("?test=a test", '=', '?') // -> ?test=a%20test
+UrlEncoder.encode("?test=a test", allow = "?=") // -> ?test=a%20test
 
+UrlEncoder.decode("a%20test%20%26") // -> a test &
 UrlEncoder.decode("%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81") // -> %#okékÉȢ smile!😁
 ```
 
