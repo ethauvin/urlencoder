@@ -20,11 +20,13 @@ description = "A simple library to encode/decode URL parameters"
 group = "net.thauvin.erik"
 version = "0.9-SNAPSHOT"
 
+
 val mavenName = "UrlEncoder"
 val deployDir = "deploy"
 val gitHub = "ethauvin/${rootProject.name}"
 val mavenUrl = "https://github.com/$gitHub"
 val publicationName = "mavenJava"
+val myClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 repositories {
     mavenCentral()
@@ -46,7 +48,7 @@ java {
 }
 
 application {
-    mainClass.set("$group.${rootProject.name}.$mavenName")
+    mainClass.set(myClassName)
 }
 
 sonarqube {
@@ -69,7 +71,7 @@ val javadocJar by tasks.creating(Jar::class) {
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = "$group.${rootProject.name}.$mavenName"
+            attributes["Main-Class"] = myClassName
         }
     }
 
