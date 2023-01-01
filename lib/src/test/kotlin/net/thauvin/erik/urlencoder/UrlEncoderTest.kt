@@ -101,6 +101,7 @@ class UrlEncoderTest {
     @Test
     fun testMainUsage() {
         var result: UrlEncoder.MainResult
+        assertEquals(usage, processMain(arrayOf("foo", "bar", "test")).output, "too many args")
         for (arg in arrayOf("", " ", "-d", "-e")) {
             result = processMain(arrayOf(arg))
             assertEquals(usage, result.output, "processMain('$arg')")

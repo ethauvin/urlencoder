@@ -31,10 +31,10 @@ import kotlin.system.exitProcess
  */
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
-    internal val usage = """Usage : kotlin -cp urlencoder-*.jar ${UrlEncoder::class.java.name} [-ed] text
-Encode and decode URL parameters.
-  -e  encode (default)
-  -d  decode"""
+    internal val usage =
+        "Usage : kotlin -cp urlencoder-*.jar ${UrlEncoder::class.java.name} [-ed] text" + System.lineSeparator() +
+                "Encode and decode URL parameters." + System.lineSeparator() + "  -e  encode (default) " +
+                System.lineSeparator() + "  -d  decode"
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     private val unreservedChars = BitSet('~'.code + 1).apply {
@@ -205,17 +205,15 @@ Encode and decode URL parameters.
 
     internal fun processMain(args: Array<String>): MainResult {
         val result = MainResult()
-        if (args.isNotEmpty() && args[0].isNotBlank()) {
+        if (args.isNotEmpty() && args[0].isNotBlank() && args.size <= 2) {
             val hasDecode = args[0] == "-d"
             val hasOption = hasDecode || args[0] == "-e"
-            if (!hasOption || args.size >= 2) {
-                val argsList = mutableListOf<String>()
-                argsList.addAll(args)
-                if (hasOption) argsList.removeAt(0)
+            if (!hasOption || args.size == 2) {
+                val arg = if (hasOption) args[1] else args[0]
                 if (hasDecode) {
-                    result.output = decode(argsList.joinToString(" "))
+                    result.output = decode(arg)
                 } else {
-                    result.output = encode(argsList.joinToString(" "))
+                    result.output = encode(arg)
                 }
                 result.status = 0
             }
