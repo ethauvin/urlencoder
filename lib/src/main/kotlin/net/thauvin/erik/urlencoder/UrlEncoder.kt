@@ -1,6 +1,6 @@
 /*
- * Copyright 2001-2022 Geert Bevin (gbevin[remove] at uwyn dot com)
- * Copyright 2022 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2001-2023 Geert Bevin (gbevin[remove] at uwyn dot com)
+ * Copyright 2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,10 +134,9 @@ object UrlEncoder {
      */
     @JvmStatic
     fun encode(source: String, allow: String): String {
-        if (source.isBlank()) {
+        if (source.isEmpty()) {
             return source
         }
-
         var out: StringBuilder? = null
         var ch: Char
         var i = 0
@@ -145,6 +144,7 @@ object UrlEncoder {
             ch = source[i]
             if (ch.isUnreserved() || allow.indexOf(ch) != -1) {
                 out?.append(ch)
+                println(out)
                 i++
             } else {
                 if (out == null) {
@@ -205,10 +205,10 @@ object UrlEncoder {
 
     internal fun processMain(args: Array<String>): MainResult {
         val result = MainResult()
-        if (args.isNotEmpty() && args[0].isNotBlank() && args.size <= 2) {
-            val hasDecode = args[0] == "-d"
-            val hasOption = hasDecode || args[0] == "-e"
-            if (!hasOption || args.size == 2) {
+        if (args.isNotEmpty() && args[0].isNotEmpty()) {
+            val hasDecode = (args[0] == "-d")
+            val hasOption = (hasDecode || args[0] == "-e")
+            if (hasOption && args.size == 2 || !hasOption && args.size == 1) {
                 val arg = if (hasOption) args[1] else args[0]
                 if (hasDecode) {
                     result.output = decode(arg)

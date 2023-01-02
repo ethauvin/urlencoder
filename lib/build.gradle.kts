@@ -26,7 +26,7 @@ val deployDir = "deploy"
 val gitHub = "ethauvin/${rootProject.name}"
 val mavenUrl = "https://github.com/$gitHub"
 val publicationName = "mavenJava"
-val myClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
+val myClassName = "$group.${rootProject.name}.$mavenName"
 
 repositories {
     mavenCentral()
@@ -34,7 +34,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+//    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
 }
 
 base {
@@ -77,6 +78,10 @@ tasks {
 
     withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = java.targetCompatibility.toString()
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     withType<Test> {

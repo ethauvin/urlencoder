@@ -2,6 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>ComplexCondition:UrlEncoder.kt$UrlEncoder$hasOption &amp;&amp; args.size == 2 || !hasOption &amp;&amp; args.size == 1</ID>
     <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0x80</ID>
     <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0xFF</ID>
     <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$16</ID>
