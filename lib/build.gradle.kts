@@ -2,6 +2,11 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+
 
 plugins {
     id("application")
@@ -82,6 +87,39 @@ tasks {
 
     test {
         useJUnitPlatform()
+        addTestListener(object : TestListener {
+            override fun beforeTest(p0: TestDescriptor?) = Unit
+            override fun beforeSuite(p0: TestDescriptor?) = Unit
+            override fun afterTest(desc: TestDescriptor, result: TestResult) = Unit
+            override fun afterSuite(desc: TestDescriptor, result: TestResult) {
+                if (desc.parent == null) {
+                    val passed = result.successfulTestCount
+                    val failed = result.failedTestCount
+                    val skipped = result.skippedTestCount
+
+                    if (project.properties["testsBadgeApiKey"] != null) {
+                        val apiKey = project.properties["testsBadgeApiKey"]
+                        val response: HttpResponse<String> = HttpClient.newHttpClient()
+                            .send(
+                                HttpRequest.newBuilder()
+                                    .uri(
+                                        URI(
+                                            "https://rife2.com/tests-badge/update/com.uwyn/urlencoder?" +
+                                                    "apiKey=$apiKey&" +
+                                                    "passed=$passed&" +
+                                                    "failed=$failed&" +
+                                                    "skipped=$skipped"
+                                        )
+                                    )
+                                    .POST(HttpRequest.BodyPublishers.noBody())
+                                    .build(), HttpResponse.BodyHandlers.ofString()
+                            )
+                        println("RESPONSE: ${response.statusCode()}")
+                        println(response.body())
+                    }
+                }
+            }
+        })
     }
 
     withType<Test> {

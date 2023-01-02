@@ -1,10 +1,11 @@
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik/urlencoder?server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
+[![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder)
 
-[//]: # ([![Release]&#40;https://img.shields.io/github/release/ethauvin/urlencoder.svg&#41;]&#40;https://github.com/ethauvin/urlencoder/releases/latest&#41;)
-[//]: # ([![Maven Central]&#40;https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder/badge.svg?color=blue&#41;]&#40;https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder&#41;)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ethauvin_urlencoder&metric=alert_status)](https://sonarcloud.io/dashboard?id=ethauvin_urlencoder)
 [![GitHub CI](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml/badge.svg)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
+[![Tests](https://rife2.com/tests-badge/badge/net.thauvin.erik/urlencoder)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 
 # URL Encoder for Kotlin and Java
 
