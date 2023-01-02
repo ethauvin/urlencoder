@@ -56,18 +56,18 @@ class UrlEncoderTest {
 
     @ParameterizedTest(name = "decode({0}) should be {1}")
     @MethodSource("validMap")
-    fun `Decode Multiple URLs`(expected: String, source: String) {
+    fun `Decode URL`(expected: String, source: String) {
         assertEquals(expected, decode(source))
     }
 
     @ParameterizedTest(name = "decode({0})")
     @MethodSource("invalid")
-    fun `Decode with Exceptions`(source: String) {
+    fun `Decode with Exception`(source: String) {
         assertThrows(IllegalArgumentException::class.java, { decode(source) }, "decode($source)")
     }
 
     @Test
-    fun `Decode when none needed`() {
+    fun `Decode when None needed`() {
         assertSame(same, decode(same))
         assertEquals("", decode(""), "decode('')")
         assertEquals(" ", decode(" "), "decode(' ')")
@@ -75,7 +75,7 @@ class UrlEncoderTest {
 
     @ParameterizedTest(name = "encode({0}) should be {1}")
     @MethodSource("validMap")
-    fun `Encode Multiple URLs`(source: String, expected: String) {
+    fun `Encode URL`(source: String, expected: String) {
         assertEquals(expected, encode(source))
     }
 
@@ -87,13 +87,13 @@ class UrlEncoderTest {
     }
 
     @Test
-    fun `Encode when none needed`() {
+    fun `Encode when None needed`() {
         assertSame(same, encode(same))
         assertSame(same, encode(same, ""), "with empty allow")
     }
 
     @Test
-    fun `Encode with allow arg`() {
+    fun `Encode with Allow Arg`() {
         assertEquals("?test=a%20test", encode("?test=a test", '=', '?'), "encode(x, =, ?)")
         assertEquals("?test=a%20test", encode("?test=a test", "=?"), "encode(x, =?)")
         assertEquals("aaa", encode("aaa", 'a'), "encode(aaa, a)")
@@ -110,7 +110,7 @@ class UrlEncoderTest {
 
     @ParameterizedTest(name = "processMain(-d {0})")
     @MethodSource("invalid")
-    fun `Main Decode with Exceptions`(source: String) {
+    fun `Main Decode with Exception`(source: String) {
         assertThrows(IllegalArgumentException::class.java, { processMain(arrayOf("-d", source)) }, source)
     }
 
@@ -124,7 +124,7 @@ class UrlEncoderTest {
 
     @ParameterizedTest(name = "processMain(-e {0})")
     @MethodSource("validMap")
-    fun `Main Encode with option`(source: String, expected: String) {
+    fun `Main Encode with Option`(source: String, expected: String) {
         val result = processMain(arrayOf("-e", source))
         assertEquals(expected, result.output)
         assertEquals(0, result.status, "processMain(-e $source).status")
@@ -132,7 +132,7 @@ class UrlEncoderTest {
 
 
     @Test
-    fun `Main Usage with Empty args`() {
+    fun `Main Usage with Empty Args`() {
         assertEquals(usage, processMain(arrayOf(" ", " ")).output, "processMain(' ', ' ')")
         assertEquals(usage, processMain(arrayOf("foo", " ")).output, "processMain('foo', ' ')")
         assertEquals(usage, processMain(arrayOf(" ", "foo")).output, "processMain(' ', 'foo')")
@@ -143,14 +143,14 @@ class UrlEncoderTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "-d", "-e"])
-    fun `Main Usage with invalid arg`(arg: String) {
+    fun `Main Usage with Invalid arg`(arg: String) {
         val result = processMain(arrayOf(arg))
         assertEquals(usage, result.output, "processMain('$arg')")
         assertEquals(1, result.status, "processMain('$arg').status")
     }
 
     @Test
-    fun `Main Usage with too many args`() {
+    fun `Main Usage with too Many Args`() {
         assertEquals(usage, processMain(arrayOf("foo", "bar", "test")).output, "too many args")
     }
 }
