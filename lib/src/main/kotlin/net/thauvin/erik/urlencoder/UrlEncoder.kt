@@ -144,7 +144,6 @@ object UrlEncoder {
             ch = source[i]
             if (ch.isUnreserved() || allow.indexOf(ch) != -1) {
                 out?.append(ch)
-                println(out)
                 i++
             } else {
                 if (out == null) {
@@ -192,13 +191,18 @@ object UrlEncoder {
      */
     @JvmStatic
     fun main(args: Array<String>) {
-        val result = processMain(args)
-        if (result.status == 1) {
-            System.err.println(result.output)
-        } else {
-            println(result.output)
+        try {
+            val result = processMain(args)
+            if (result.status == 1) {
+                System.err.println(result.output)
+            } else {
+                println(result.output)
+            }
+            exitProcess(result.status)
+        } catch (e: IllegalArgumentException) {
+            System.err.println("${UrlEncoder::class.java.simpleName}: ${e.message}");
+            exitProcess(1)
         }
-        exitProcess(result.status)
     }
 
     internal data class MainResult(var output: String = usage, var status: Int = 1)
