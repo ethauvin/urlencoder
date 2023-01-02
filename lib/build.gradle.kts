@@ -99,12 +99,13 @@ tasks {
 
                     if (project.properties["testsBadgeApiKey"] != null) {
                         val apiKey = project.properties["testsBadgeApiKey"]
+                        println(apiKey)
                         val response: HttpResponse<String> = HttpClient.newHttpClient()
                             .send(
                                 HttpRequest.newBuilder()
                                     .uri(
                                         URI(
-                                            "https://rife2.com/tests-badge/update/com.uwyn/urlencoder?" +
+                                            "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
                                                     "apiKey=$apiKey&" +
                                                     "passed=$passed&" +
                                                     "failed=$failed&" +
