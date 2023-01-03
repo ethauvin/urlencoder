@@ -38,13 +38,13 @@ To use with [Gradle](https://gradle.org/), include the following dependency in y
 ```gradle
 repositories {
     mavenCentral()
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") } // only needed for SNAPSHOT
 }
 
 dependencies {
-    implementation("net.thauvin.erik:urlencoder:0.9-SNAPSHOT")
+    implementation("net.thauvin.erik:urlencoder:1.0.0")
 }
 ```
 
-Instructions for using with Maven, Ivy, etc. can be found on Maven Central.
+Instructions for using with Maven, Ivy, etc. can be found on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder).
 
