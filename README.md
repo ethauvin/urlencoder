@@ -48,3 +48,44 @@ dependencies {
 
 Instructions for using with Maven, Ivy, etc. can be found on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder).
 
+## Standalone usage
+
+UrlEncoder can be used on the command line also, both for encoding and decoding.
+
+You have two options:
+* run it with Gradle
+* build the jar and launch it with Java
+
+The usage is as follows:
+
+```
+Encode and decode URL parameters.
+  -e  encode (default)
+  -d  decode
+```
+
+### Running with Gradle
+
+```shell
+./gradlew run --args="-e 'a test &'"        # -> a%20test%20%26
+./gradlew run --args="%#okékÉȢ"             # -> %25%23ok%C3%A9k%C3%89%C8%A2
+
+./gradlew run --args="-d 'a%20test%20%26'"  # -> a test &
+```
+
+### Running with Java
+
+First build the jar file:
+
+```shell
+./gradlew clean fatJar
+```
+
+Then run it:
+
+```shell
+java -jar lib/build/libs/urlencoder-*all.jar -e "a test &"       # -> a%20test%20%26
+java -jar lib/build/libs/urlencoder-*all.jar "%#okékÉȢ"          # -> %25%23ok%C3%A9k%C3%89%C8%A2
+
+java -jar lib/build/libs/urlencoder-*.all.jar -d "a%20test%20%26" # -> a test &
+```

@@ -23,7 +23,7 @@ plugins {
 
 description = "A simple library to encode/decode URL parameters"
 group = "net.thauvin.erik"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 
 val mavenName = "UrlEncoder"
@@ -79,6 +79,22 @@ tasks {
         manifest {
             attributes["Main-Class"] = myClassName
         }
+    }
+
+    val fatJar = register<Jar>("fatJar") {
+        group = "build"
+        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
+        archiveClassifier.set("all")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
+        val sourcesMain = sourceSets.main.get()
+        val contents = configurations.runtimeClasspath.get()
+            .map { if (it.isDirectory) it else zipTree(it) } + sourcesMain.output
+        from(contents)
+    }
+
+    build {
+        dependsOn(fatJar)
     }
 
     withType<KotlinCompile>().configureEach {

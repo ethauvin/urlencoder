@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik</groupId>
   <artifactId>urlencoder</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>UrlEncoder</name>
   <description>A simple library to encode/decode URL parameters</description>
   <url>https://github.com/ethauvin/urlencoder</url>

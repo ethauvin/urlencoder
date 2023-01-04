@@ -32,7 +32,7 @@ import kotlin.system.exitProcess
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
     internal val usage =
-        "Usage : kotlin -cp urlencoder-*.jar ${UrlEncoder::class.java.name} [-ed] text" + System.lineSeparator() +
+        "Usage : java -jar urlencoder-*all.jar [-ed] text" + System.lineSeparator() +
                 "Encode and decode URL parameters." + System.lineSeparator() + "  -e  encode (default) " +
                 System.lineSeparator() + "  -d  decode"
 
