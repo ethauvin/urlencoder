@@ -7,7 +7,7 @@
 [![GitHub CI](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml/badge.svg)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 [![Tests](https://rife2.com/tests-badge/badge/net.thauvin.erik/urlencoder)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 
-# URL Encoder for Kotlin and Java
+# URL Encoder for Kotlin
 
 A simple library to encode/decode URL parameters.
 
