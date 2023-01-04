@@ -20,7 +20,8 @@ For decades we've been using [java.net.URLEncoder](https://docs.oracle.com/en/ja
 Additionally, `java.net.URLEncoder` allocates memory even when no encoding is necessary, significantly impacting performance. This library has a negligible performance impact when the specified string doesn't need to be encoded.
 
 
-Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses these issues, but does not currently support [unicode surrogate pairs](https://learn.microsoft.com/en-us/globalization/encoding/surrogate-pairs).
+Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses the same issues.
+
 ## Examples (TL;DR)
 
 ```kotlin
