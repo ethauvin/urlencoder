@@ -110,13 +110,13 @@ Apart for being quite inefficient, some URL components encoded with `URLEncoder.
 For example, a simply search query such as:
 
 ```kotlin
-val u = URLEncoder.encode("foo +bar", StandardCharsets.UTF_8)
+val u = URLEncoder.encode("foo + bar", StandardCharsets.UTF_8)
 ```
 
 would be encoded as:
 
 ```
-foo+%28bar
+foo+%28+bar
 ```
 
 Trying to decode it with [Spring](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/UriUtils.html#decode(java.lang.String,java.lang.String)), for example:
@@ -128,7 +128,7 @@ UriUtils.decode(u, StandardCharsets.UTF_8))
 would return:
 
 ```
-foo++bar
+foo+++bar
 ```
 
 Unfortunately, decoding with [Uri.decode](https://developer.android.com/reference/android/net/Uri#decode(java.lang.String)) on Android, [decodeURI](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURI) in Javascript, etc. would yield the exact same result.
