@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.thauvin.erik:urlencoder:1.0.0")
+    implementation("net.thauvin.erik:urlencoder:1.0.1")
 }
 ```
 
