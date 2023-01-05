@@ -72,7 +72,7 @@ You have two options:
 The usage is as follows:
 
 ```
-Encode and decode URL parameters.
+Encode and decode URL components defensively.
   -e  encode (default)
   -d  decode
 ```

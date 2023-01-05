@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
-    <ManuallySuppressedIssues/>
-    <CurrentIssues>
-        <ID>ComplexCondition:UrlEncoder.kt$UrlEncoder$hasOption &amp;&amp; args.size == 2 || !hasOption &amp;&amp;
-            args.size == 1
-        </ID>
-        <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0x80</ID>
-        <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0xFF</ID>
-        <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$16</ID>
-        <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$3</ID>
-        <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$4</ID>
-        <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic fun encode(source: String, allow: String): String</ID>
-    </CurrentIssues>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:UrlEncoder.kt$UrlEncoder$hasOption &amp;&amp; args.size == 2 || !hasOption &amp;&amp; args.size == 1</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0x80</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0xFF</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$16</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$3</ID>
+    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$4</ID>
+    <ID>MaxLineLength:UrlEncoder.kt$UrlEncoder$*</ID>
+    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic fun encode(source: String, allow: String): String</ID>
+  </CurrentIssues>
 </SmellBaseline>

@@ -23,7 +23,7 @@ plugins {
 
 description = "A simple defensive library to encode/decode URL components"
 group = "net.thauvin.erik"
-version = "1.0.1-SNAPSHOT"
+version = "1.0.1"
 
 
 val mavenName = "UrlEncoder"

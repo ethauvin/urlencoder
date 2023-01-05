@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik</groupId>
   <artifactId>urlencoder</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>UrlEncoder for Kotlin</name>
   <description>A simple defensive library to encode/decode URL components</description>
   <url>https://github.com/ethauvin/urlencoder</url>
