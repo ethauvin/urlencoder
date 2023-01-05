@@ -22,22 +22,31 @@ import java.util.BitSet
 import kotlin.system.exitProcess
 
 /**
- * URL parameters encoding and decoding.
+ * Most defensive approach to URL encoding and decoding.
  *
- * - Rules determined by [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#page-13),
+ * - Rules determined by combining the unreserved character set from
+ * [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#page-13) with the percent-encode set from
+ * [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set).
  *
- * @author Geert Bevin (gbevin[remove] at uwyn dot com)
+ * - Both specs above support percent decoding of two hexadecimal digits to a binary octet, however their unreserved
+ * set of characters differs and `application/x-www-form-urlencoded` adds conversion of space to `+`, which has the
+ * potential to be misunderstood.
+ *
+ * - This library encodes with rules that will be decoded correctly in either case.
+ *
+ * @author Geert Bevin (gbevin(remove) at uwyn dot com)
  * @author Erik C. Thauvin (erik@thauvin.net)
- */
+ **/
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
     internal val usage =
         "Usage : java -jar urlencoder-*all.jar [-ed] text" + System.lineSeparator() +
-                "Encode and decode URL parameters." + System.lineSeparator() + "  -e  encode (default) " +
+                "Encode and decode URL components defensively." + System.lineSeparator() + "  -e  encode (default) " +
                 System.lineSeparator() + "  -d  decode"
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
-    private val unreservedChars = BitSet('~'.code + 1).apply {
+    // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
+    private val unreservedChars = BitSet('z'.code + 1).apply {
         set('-')
         set('.')
         for (c in '0'..'9') {
@@ -50,14 +59,14 @@ object UrlEncoder {
         for (c in 'a'.code..'z'.code) {
             set(c)
         }
-        set('~')
     }
 
     private fun BitSet.set(c: Char) = this.set(c.code)
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
+    // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
     private fun Char.isUnreserved(): Boolean {
-        return this <= '~' && unreservedChars.get(code)
+        return this <= 'z' && unreservedChars.get(code)
     }
 
     private fun StringBuilder.appendEncodedDigit(digit: Int) {
@@ -130,7 +139,7 @@ object UrlEncoder {
      * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
      * encoding.
      *
-     * - Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
+     * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
      */
     @JvmStatic
     fun encode(source: String, allow: String): String {
@@ -177,7 +186,7 @@ object UrlEncoder {
      * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
      * encoding.
      *
-     * - Letters, numbers, unreserved (`_-!.~'()*`) and allowed characters are left intact.
+     * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
      */
     @JvmStatic
     fun encode(source: String, vararg allow: Char): String {
@@ -187,7 +196,7 @@ object UrlEncoder {
     /**
      * Encodes and decodes URLs from the command line.
      *
-     * - `kotlin -cp urlencoder-*.jar net.thauvin.erik.urlencoder.UrlEncoder`
+     * - `java -jar urlencoder-*all.jar <text>`
      */
     @JvmStatic
     fun main(args: Array<String>) {
@@ -200,7 +209,7 @@ object UrlEncoder {
             }
             exitProcess(result.status)
         } catch (e: IllegalArgumentException) {
-            System.err.println("${UrlEncoder::class.java.simpleName}: ${e.message}");
+            System.err.println("${UrlEncoder::class.java.simpleName}: ${e.message}")
             exitProcess(1)
         }
     }

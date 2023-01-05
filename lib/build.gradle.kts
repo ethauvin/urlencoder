@@ -21,7 +21,7 @@ plugins {
     id("signing")
 }
 
-description = "A simple library to encode/decode URL parameters"
+description = "A simple defensive library to encode/decode URL components"
 group = "net.thauvin.erik"
 version = "1.0.1-SNAPSHOT"
 
@@ -193,7 +193,7 @@ publishing {
             artifactId = rootProject.name
             artifact(javadocJar)
             pom {
-                name.set(mavenName)
+                name.set("$mavenName for Kotlin")
                 description.set(project.description)
                 url.set(mavenUrl)
                 licenses {

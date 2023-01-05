@@ -9,18 +9,27 @@
 
 # URL Encoder for Kotlin
 
-A simple library to encode/decode URL parameters.
+A simple defensive library to encode/decode URL components.
 
 This library was adapted from the [RIFE2 Web Application Framework](https://rife2.com).  
 A pure Java version can also be found at [https://github.com/gbevin/urlencoder](https://github.com/gbevin/urlencoder).
 
+The rules are determined by combining the unreserved character set from
+[RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#page-13) with the
+percent-encode set from
+[application/x-www-form-urlencoded](https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set).
 
-For decades we've been using [java.net.URLEncoder](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URLEncoder.html) because of its improper naming. It is actually intended to encode HTML form parameters, not URLs, causing the wrong escape sequences to be used.
+Both specs above support percent decoding of two hexadecimal digits to a
+binary octet, however their unreserved set of characters differs and
+`application/x-www-form-urlencoded` adds conversion of space to `+`,
+that has the potential to be misunderstood.
 
-Additionally, `java.net.URLEncoder` allocates memory even when no encoding is necessary, significantly impacting performance. This library has a negligible performance impact when the specified string doesn't need to be encoded.
+This class encodes with rules that will be decoded correctly in either case.
 
-
-Android's [Uri.encode](https://developer.android.com/reference/android/net/Uri#encode(java.lang.String,%20java.lang.String)) also addresses the same issues.
+Additionally, this library allocates no memory when encoding isn't needed and
+does the work in a single pass without multiple loops. Both of these
+optimizations have a significantly beneficial impact on performance of encoding
+compared to other solutions like the standard `URLEncoder` in the JDK.
 
 ## Examples (TL;DR)
 
@@ -34,6 +43,7 @@ UrlEncoder.decode("%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81") // -> %#
 ```
 
 ## Gradle, Maven, etc.
+
 To use with [Gradle](https://gradle.org/), include the following dependency in your build file:
 
 ```gradle
@@ -47,13 +57,15 @@ dependencies {
 }
 ```
 
-Instructions for using with Maven, Ivy, etc. can be found on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder).
+Instructions for using with Maven, Ivy, etc. can be found
+on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder).
 
 ## Standalone usage
 
 UrlEncoder can be used on the command line also, both for encoding and decoding.
 
 You have two options:
+
 * run it with Gradle
 * build the jar and launch it with Java
 
