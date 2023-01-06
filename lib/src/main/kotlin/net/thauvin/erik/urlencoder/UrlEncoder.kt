@@ -40,7 +40,7 @@ import kotlin.system.exitProcess
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
     internal val usage =
-        "Usage : java -jar urlencoder-*all.jar [-ed] text" + System.lineSeparator() +
+        "Usage : java -jar urlencoder-*all.jar [-ed] <text>" + System.lineSeparator() +
                 "Encode and decode URL components defensively." + System.lineSeparator() + "  -e  encode (default) " +
                 System.lineSeparator() + "  -d  decode"
 
@@ -85,7 +85,7 @@ object UrlEncoder {
      */
     @JvmStatic
     fun decode(source: String): String {
-        if (source.isBlank()) {
+        if (source.isEmpty()) {
             return source
         }
 
@@ -142,7 +142,8 @@ object UrlEncoder {
      * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
      */
     @JvmStatic
-    fun encode(source: String, allow: String): String {
+    @JvmOverloads
+    fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String {
         if (source.isEmpty()) {
             return source
         }
@@ -159,38 +160,32 @@ object UrlEncoder {
                     out = StringBuilder(source.length)
                     out.append(source, 0, i)
                 }
-                val cp = source.codePointAt(i)
-                if (cp < 0x80) {
-                    out.appendEncodedByte(cp)
+                if (spaceToPlus && ch == ' ') {
+                    out.append('+')
                     i++
-                } else if (Character.isBmpCodePoint(cp)) {
-                    for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
-                        out.appendEncodedByte(b.toInt())
+                } else {
+                    val cp = source.codePointAt(i)
+                    if (cp < 0x80) {
+                        out.appendEncodedByte(cp)
+                        i++
+                    } else if (Character.isBmpCodePoint(cp)) {
+                        for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
+                            out.appendEncodedByte(b.toInt())
+                        }
+                        i++
+                    } else if (Character.isSupplementaryCodePoint(cp)) {
+                        val high = Character.highSurrogate(cp)
+                        val low = Character.lowSurrogate(cp)
+                        for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
+                            out.appendEncodedByte(b.toInt())
+                        }
+                        i += 2
                     }
-                    i++
-                } else if (Character.isSupplementaryCodePoint(cp)) {
-                    val high = Character.highSurrogate(cp)
-                    val low = Character.lowSurrogate(cp)
-                    for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
-                        out.appendEncodedByte(b.toInt())
-                    }
-                    i += 2
                 }
             }
         }
 
         return out?.toString() ?: source
-    }
-
-    /**
-     * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
-     * encoding.
-     *
-     * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
-     */
-    @JvmStatic
-    fun encode(source: String, vararg allow: Char): String {
-        return encode(source, String(allow))
     }
 
     /**

@@ -23,7 +23,7 @@ plugins {
 
 description = "A simple defensive library to encode/decode URL components"
 group = "net.thauvin.erik"
-version = "1.0.1"
+version = "1.2.1-SNAPSHOT"
 
 
 val mavenName = "UrlEncoder"
@@ -40,7 +40,7 @@ repositories {
 
 dependencies {
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 }
 
 base {

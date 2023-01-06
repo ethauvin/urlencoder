@@ -81,23 +81,29 @@ class UrlEncoderTest {
 
     @Test
     fun `Encode Empty or Blank`() {
-        assertTrue(encode("", "").isEmpty(), "encode('','')")
+        assertTrue(encode("", allow = "").isEmpty(), "encode('','')")
         assertEquals("", encode(""), "encode('')")
-        assertEquals("%20", encode(" "), "encode('')")
+        assertEquals("%20", encode(" "), "encode(' ')")
     }
 
     @Test
     fun `Encode when None needed`() {
         assertSame(same, encode(same))
-        assertSame(same, encode(same, ""), "with empty allow")
+        assertSame(same, encode(same, allow = ""), "with empty allow")
     }
 
     @Test
     fun `Encode with Allow Arg`() {
-        assertEquals("?test=a%20test", encode("?test=a test", '=', '?'), "encode(x, =, ?)")
-        assertEquals("?test=a%20test", encode("?test=a test", "=?"), "encode(x, =?)")
-        assertEquals("aaa", encode("aaa", 'a'), "encode(aaa, a)")
-        assertEquals(" ", encode(" ", ' '), "encode(' ', ' ')")
+        assertEquals("?test=a%20test", encode("?test=a test", allow = "=?"), "encode(x, =?)")
+        assertEquals("aaa", encode("aaa", "a"), "encode(aaa, a)")
+        assertEquals(" ", encode(" ",  " "), "encode(' ', ' ')")
+    }
+
+    @Test
+    fun `Encode with Space to Plus`() {
+        assertEquals("foo+bar", encode("foo bar", spaceToPlus = true))
+        assertEquals("foo+bar++foo", encode("foo bar  foo", spaceToPlus = true))
+        assertEquals("foo bar", encode("foo bar", " ", true))
     }
 
     @ParameterizedTest(name = "processMain(-d {1}) should be {0}")
