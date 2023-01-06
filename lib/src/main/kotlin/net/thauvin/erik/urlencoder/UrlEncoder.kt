@@ -84,23 +84,24 @@ object UrlEncoder {
      * encoding.
      */
     @JvmStatic
-    fun decode(source: String): String {
+    fun decode(source: String, plusToSpace: Boolean = false): String {
         if (source.isEmpty()) {
             return source
         }
 
         val length = source.length
-        var out: StringBuilder? = null
+        val out: StringBuilder by lazy { StringBuilder(length) }
         var ch: Char
         var bytesBuffer: ByteArray? = null
         var bytesPos = 0
         var i = 0
+        var start = false
         while (i < length) {
             ch = source[i]
             if (ch == '%') {
-                if (out == null) {
-                    out = StringBuilder(length)
+                if (!start) {
                     out.append(source, 0, i)
+                    start = true
                 }
                 if (bytesBuffer == null) {
                     // the remaining characters divided by the length of the encoding format %xx, is the maximum number
@@ -119,20 +120,30 @@ object UrlEncoder {
                 }
             } else {
                 if (bytesBuffer != null) {
-                    out!!.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+                    out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+                    start = true
                     bytesBuffer = null
                     bytesPos = 0
                 }
-                out?.append(ch)
+                if (plusToSpace && ch == '+') {
+                    if (!start) {
+                        out.append(source, 0, i)
+                    }
+                    out.append(" ")
+                    start = true
+                } else if (start) {
+                    out.append(ch)
+                    start = true
+                }
                 i++
             }
         }
 
         if (bytesBuffer != null) {
-            out!!.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+            out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
         }
 
-        return out?.toString() ?: source
+        return if (!start) source else out.toString()
     }
 
     /**

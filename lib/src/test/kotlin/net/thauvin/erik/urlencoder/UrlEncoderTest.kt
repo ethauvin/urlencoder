@@ -73,6 +73,14 @@ class UrlEncoderTest {
         assertEquals(" ", decode(" "), "decode(' ')")
     }
 
+    @Test
+    fun `Decode with Plus to Space`() {
+        assertEquals("foo bar", decode("foo+bar", true))
+        assertEquals("foo bar  foo", decode("foo+bar++foo", true))
+        assertEquals("foo  bar  foo", decode("foo+%20bar%20+foo", true))
+        assertEquals("foo + bar", decode("foo+%2B+bar", plusToSpace = true))
+    }
+
     @ParameterizedTest(name = "encode({0}) should be {1}")
     @MethodSource("validMap")
     fun `Encode URL`(source: String, expected: String) {
