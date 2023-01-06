@@ -1,6 +1,6 @@
 /*
  * Copyright 2001-2023 Geert Bevin (gbevin[remove] at uwyn dot com)
- * Copyright 2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2022-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import kotlin.system.exitProcess
 object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
     internal val usage =
-        "Usage : java -jar urlencoder-*all.jar [-ed] <text>" + System.lineSeparator() +
+        "Usage : java -jar urlencoder-*all.jar [-ed] text" + System.lineSeparator() +
                 "Encode and decode URL components defensively." + System.lineSeparator() + "  -e  encode (default) " +
                 System.lineSeparator() + "  -d  decode"
 
@@ -160,27 +160,26 @@ object UrlEncoder {
                     out = StringBuilder(source.length)
                     out.append(source, 0, i)
                 }
-                if (spaceToPlus && ch == ' ') {
-                    out.append('+')
-                    i++
-                } else {
-                    val cp = source.codePointAt(i)
-                    if (cp < 0x80) {
+                val cp = source.codePointAt(i)
+                if (cp < 0x80) {
+                    if (spaceToPlus && ch == ' ') {
+                        out.append('+')
+                    } else {
                         out.appendEncodedByte(cp)
-                        i++
-                    } else if (Character.isBmpCodePoint(cp)) {
-                        for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
-                            out.appendEncodedByte(b.toInt())
-                        }
-                        i++
-                    } else if (Character.isSupplementaryCodePoint(cp)) {
-                        val high = Character.highSurrogate(cp)
-                        val low = Character.lowSurrogate(cp)
-                        for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
-                            out.appendEncodedByte(b.toInt())
-                        }
-                        i += 2
                     }
+                    i++
+                } else if (Character.isBmpCodePoint(cp)) {
+                    for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
+                        out.appendEncodedByte(b.toInt())
+                    }
+                    i++
+                } else if (Character.isSupplementaryCodePoint(cp)) {
+                    val high = Character.highSurrogate(cp)
+                    val low = Character.lowSurrogate(cp)
+                    for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
+                        out.appendEncodedByte(b.toInt())
+                    }
+                    i += 2
                 }
             }
         }
@@ -191,7 +190,7 @@ object UrlEncoder {
     /**
      * Encodes and decodes URLs from the command line.
      *
-     * - `java -jar urlencoder-*all.jar <text>`
+     * - `java -jar urlencoder-*all.jar [-ed] text`
      */
     @JvmStatic
     fun main(args: Array<String>) {

@@ -1,6 +1,6 @@
 /*
  * Copyright 2001-2023 Geert Bevin (gbevin[remove] at uwyn dot com)
- * Copyright 2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2022-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
