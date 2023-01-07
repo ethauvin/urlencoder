@@ -9,7 +9,7 @@
     <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$3</ID>
     <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$4</ID>
     <ID>MaxLineLength:UrlEncoder.kt$UrlEncoder$*</ID>
+    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic @JvmOverloads fun decode(source: String, plusToSpace: Boolean = false): String</ID>
     <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic @JvmOverloads fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String</ID>
-    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic fun decode(source: String, plusToSpace: Boolean = false): String</ID>
   </CurrentIssues>
 </SmellBaseline>
