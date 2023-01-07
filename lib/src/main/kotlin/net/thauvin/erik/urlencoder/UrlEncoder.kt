@@ -129,12 +129,11 @@ object UrlEncoder {
                 if (plusToSpace && ch == '+') {
                     if (!started) {
                         out.append(source, 0, i)
+                        started = true
                     }
                     out.append(" ")
-                    started = true
                 } else if (started) {
                     out.append(ch)
-                    started = true
                 }
                 i++
             }
