@@ -41,18 +41,19 @@ object UrlEncoder {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
     internal val usage =
         "Usage : java -jar urlencoder-*all.jar [-ed] text" + System.lineSeparator() +
-                "Encode and decode URL components defensively." + System.lineSeparator() + "  -e  encode (default) " +
-                System.lineSeparator() + "  -d  decode"
+                "Encode and decode URL components defensively." + System.lineSeparator() +
+                "  -e  encode (default) " + System.lineSeparator() +
+                "  -d  decode"
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
     private val unreservedChars = BitSet('z'.code + 1).apply {
-        set('-')
-        set('.')
-        for (c in '0'..'9') {
+        set('-'.code)
+        set('.'.code)
+        for (c in '0'.code..'9'.code) {
             set(c)
         }
-        for (c in 'A'..'Z') {
+        for (c in 'A'.code..'Z'.code) {
             set(c)
         }
         set('_'.code)
@@ -60,8 +61,6 @@ object UrlEncoder {
             set(c)
         }
     }
-
-    private fun BitSet.set(c: Char) = this.set(c.code)
 
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
@@ -117,7 +116,7 @@ object UrlEncoder {
                     bytesBuffer[bytesPos++] = v.toByte()
                     i += 2
                 } catch (e: NumberFormatException) {
-                    throw IllegalArgumentException("Illegal characters in escape sequence: $e.message")
+                    throw IllegalArgumentException("Illegal characters in escape sequence: $e.message", e)
                 }
             } else {
                 if (bytesBuffer != null) {
