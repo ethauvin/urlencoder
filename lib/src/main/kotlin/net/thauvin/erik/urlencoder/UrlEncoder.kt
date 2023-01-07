@@ -84,6 +84,7 @@ object UrlEncoder {
      * encoding.
      */
     @JvmStatic
+    @JvmOverloads
     fun decode(source: String, plusToSpace: Boolean = false): String {
         if (source.isEmpty()) {
             return source
@@ -95,13 +96,13 @@ object UrlEncoder {
         var bytesBuffer: ByteArray? = null
         var bytesPos = 0
         var i = 0
-        var start = false
+        var started = false
         while (i < length) {
             ch = source[i]
             if (ch == '%') {
-                if (!start) {
+                if (!started) {
                     out.append(source, 0, i)
-                    start = true
+                    started = true
                 }
                 if (bytesBuffer == null) {
                     // the remaining characters divided by the length of the encoding format %xx, is the maximum number
@@ -111,7 +112,7 @@ object UrlEncoder {
                 i++
                 require(length >= i + 2) { "Illegal escape sequence" }
                 try {
-                    val v: Int = source.substring(i, i + 2).toInt(16)
+                    val v = source.substring(i, i + 2).toInt(16)
                     require(v in 0..0xFF) { "Illegal escape value" }
                     bytesBuffer[bytesPos++] = v.toByte()
                     i += 2
@@ -121,19 +122,19 @@ object UrlEncoder {
             } else {
                 if (bytesBuffer != null) {
                     out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
-                    start = true
+                    started = true
                     bytesBuffer = null
                     bytesPos = 0
                 }
                 if (plusToSpace && ch == '+') {
-                    if (!start) {
+                    if (!started) {
                         out.append(source, 0, i)
                     }
                     out.append(" ")
-                    start = true
-                } else if (start) {
+                    started = true
+                } else if (started) {
                     out.append(ch)
-                    start = true
+                    started = true
                 }
                 i++
             }
@@ -143,7 +144,7 @@ object UrlEncoder {
             out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
         }
 
-        return if (!start) source else out.toString()
+        return if (!started) source else out.toString()
     }
 
     /**

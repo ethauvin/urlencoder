@@ -79,6 +79,7 @@ class UrlEncoderTest {
         assertEquals("foo bar  foo", decode("foo+bar++foo", true))
         assertEquals("foo  bar  foo", decode("foo+%20bar%20+foo", true))
         assertEquals("foo + bar", decode("foo+%2B+bar", plusToSpace = true))
+        assertEquals("foo+bar", decode("foo%2Bbar", plusToSpace = true))
     }
 
     @ParameterizedTest(name = "encode({0}) should be {1}")
