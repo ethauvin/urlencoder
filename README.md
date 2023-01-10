@@ -1,6 +1,6 @@
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![License](https://img.shields.io/badge/kotlin-1.8.0-blue)](https://kotlinlang.org/)
-[![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik/urlencoder?server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.8.0-blue)](https://kotlinlang.org/)
+[![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik/urlencoder?label=snapshot&server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
 [![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder)
 
@@ -113,13 +113,13 @@ Apart for being quite inefficient, some URL components encoded with `URLEncoder.
 For example, a simply search query such as:
 
 ```kotlin
-val u = URLEncoder.encode("foo + bar", StandardCharsets.UTF_8)
+val u = URLEncoder.encode("foo +bar", StandardCharsets.UTF_8)
 ```
 
 would be encoded as:
 
 ```
-foo+%28+bar
+foo+%2Bbar
 ```
 
 Trying to decode it with [Spring](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/UriUtils.html#decode(java.lang.String,java.lang.String)), for example:
@@ -131,10 +131,10 @@ UriUtils.decode(u, StandardCharsets.UTF_8))
 would return:
 
 ```
-foo+++bar
+foo++bar
 ```
 
 Unfortunately, decoding with [Uri.decode](https://developer.android.com/reference/android/net/Uri#decode(java.lang.String)) on Android, [decodeURI](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURI) in Javascript, etc. would yield the exact same result.
 
-![URLEncoder](https://live.staticflickr.com/65535/52607534147_dee4a5a390_c.jpg)
+![URLEncoder](https://live.staticflickr.com/65535/52607534147_6197b42666_z.jpg)
 
