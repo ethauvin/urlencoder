@@ -17,6 +17,7 @@
 
 package buildsrc.utils
 
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.testing.TestDescriptor
 import org.gradle.api.tasks.testing.TestListener
 import org.gradle.api.tasks.testing.TestResult
@@ -26,37 +27,39 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 class Rife2TestListener(
-  private val testBadgeApiKey: String?
+    private val testBadgeApiKey: Provider<String>
 ) : TestListener {
-  override fun beforeTest(p0: TestDescriptor?) = Unit
-  override fun beforeSuite(p0: TestDescriptor?) = Unit
-  override fun afterTest(desc: TestDescriptor, result: TestResult) = Unit
-  override fun afterSuite(desc: TestDescriptor, result: TestResult) {
-    if (desc.parent == null) {
-      val passed = result.successfulTestCount
-      val failed = result.failedTestCount
-      val skipped = result.skippedTestCount
+    override fun beforeTest(p0: TestDescriptor?) = Unit
+    override fun beforeSuite(p0: TestDescriptor?) = Unit
+    override fun afterTest(desc: TestDescriptor, result: TestResult) = Unit
+    override fun afterSuite(desc: TestDescriptor, result: TestResult) {
+        if (desc.parent == null) {
+            val passed = result.successfulTestCount
+            val failed = result.failedTestCount
+            val skipped = result.skippedTestCount
 
-      if (testBadgeApiKey != null) {
-        println(testBadgeApiKey)
-        val response: HttpResponse<String> = HttpClient.newHttpClient()
-          .send(
-            HttpRequest.newBuilder()
-              .uri(
-                URI(
-                  "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
-                      "apiKey=$testBadgeApiKey&" +
-                      "passed=$passed&" +
-                      "failed=$failed&" +
-                      "skipped=$skipped"
-                )
-              )
-              .POST(HttpRequest.BodyPublishers.noBody())
-              .build(), HttpResponse.BodyHandlers.ofString()
-          )
-        println("RESPONSE: ${response.statusCode()}")
-        println(response.body())
-      }
+            val apiKey = testBadgeApiKey.orNull
+
+            if (apiKey != null) {
+                println(apiKey)
+                val response: HttpResponse<String> = HttpClient.newHttpClient()
+                    .send(
+                        HttpRequest.newBuilder()
+                            .uri(
+                                URI(
+                                    "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
+                                        "apiKey=$apiKey&" +
+                                        "passed=$passed&" +
+                                        "failed=$failed&" +
+                                        "skipped=$skipped"
+                                )
+                            )
+                            .POST(HttpRequest.BodyPublishers.noBody())
+                            .build(), HttpResponse.BodyHandlers.ofString()
+                    )
+                println("RESPONSE: ${response.statusCode()}")
+                println(response.body())
+            }
+        }
     }
-  }
 }

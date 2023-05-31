@@ -17,17 +17,25 @@
 
 package buildsrc.conventions
 
+import org.sonarqube.gradle.SonarTask
+
 plugins {
-  id("org.sonarqube")
+    id("org.sonarqube")
+    id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 sonarqube {
-  properties {
-    property("sonar.projectName", rootProject.name)
-    property("sonar.projectKey", "ethauvin_${rootProject.name}")
-    property("sonar.organization", "ethauvin-github")
-    property("sonar.host.url", "https://sonarcloud.io")
-    property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/kover/xml/report.xml")
-  }
+    properties {
+        property("sonar.projectName", rootProject.name)
+        property("sonar.projectKey", "ethauvin_${rootProject.name}")
+        property("sonar.organization", "ethauvin-github")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/kover/report.xml")
+    }
+}
+
+tasks.withType<SonarTask>().configureEach {
+    dependsOn(tasks.matching { it.name == "koverXmlReport" })
 }

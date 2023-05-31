@@ -1,27 +1,17 @@
-import buildsrc.utils.Rife2TestListener
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
+    buildsrc.conventions.lang.`kotlin-jvm`
+    buildsrc.conventions.publishing
     id("application")
     id("com.github.ben-manes.versions")
-    id("io.gitlab.arturbosch.detekt")
-    id("java-library")
-    id("maven-publish")
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlinx.kover")
-
-    buildsrc.conventions.publishing
-    buildsrc.conventions.sonarqube
 }
 
 description = "A simple defensive library to encode/decode URL components"
 
 val deployDir = project.layout.projectDirectory.dir("deploy")
-val mainClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
+val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 dependencies {
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
@@ -32,20 +22,14 @@ base {
     archivesName.set(rootProject.name)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-    withSourcesJar()
-}
-
 application {
-    mainClass.set(mainClassName)
+    mainClass.set(urlEncoderMainClass)
 }
 
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = mainClassName
+            attributes["Main-Class"] = urlEncoderMainClass
         }
     }
 
@@ -65,28 +49,8 @@ tasks {
         dependsOn(fatJar)
     }
 
-    withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = java.targetCompatibility.toString()
-    }
-
-    test {
-        addTestListener(Rife2TestListener(project.properties["testsBadgeApiKey"]?.toString()))
-    }
-
-    withType<Test>().configureEach {
-        useJUnitPlatform()
-        testLogging {
-            exceptionFormat = TestExceptionFormat.FULL
-            events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-        }
-    }
-
     withType<GenerateMavenPom>().configureEach {
         destination = file("$projectDir/pom.xml")
-    }
-
-    clean {
-        delete(deployDir)
     }
 
     withType<DokkaTask>().configureEach {
@@ -113,8 +77,8 @@ tasks {
         dependsOn(build, copyToDeploy)
     }
 
-    "sonar" {
-        dependsOn(koverReport)
+    clean {
+        delete(deployDir)
     }
 }
 
@@ -122,7 +86,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifactId = "${rootProject.name}-lib"
+            artifactId = rootProject.name
             artifact(tasks.javadocJar)
         }
     }
