@@ -7,12 +7,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("application")
-    id("com.github.ben-manes.versions") version "0.44.0"
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("com.github.ben-manes.versions")
+    id("io.gitlab.arturbosch.detekt")
     id("java-library")
     id("maven-publish")
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    id("org.jetbrains.kotlinx.kover")
 
     buildsrc.conventions.publishing
     buildsrc.conventions.sonarqube
