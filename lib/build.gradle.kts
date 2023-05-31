@@ -18,12 +18,10 @@ plugins {
     buildsrc.conventions.sonarqube
 }
 
-val mavenName = "UrlEncoder"
+description = "A simple defensive library to encode/decode URL components"
+
 val deployDir = project.layout.projectDirectory.dir("deploy")
-val gitHub = "ethauvin/${rootProject.name}"
-val mavenUrl = "https://github.com/$gitHub"
-val publicationName = "mavenJava"
-val myClassName = "$group.${rootProject.name}.$mavenName"
+val mainClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 dependencies {
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
@@ -41,18 +39,18 @@ java {
 }
 
 application {
-    mainClass.set(myClassName)
+    mainClass.set(mainClassName)
 }
 
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = myClassName
+            attributes["Main-Class"] = mainClassName
         }
     }
 
-    val fatJar = register<Jar>("fatJar") {
-        group = "build"
+    val fatJar by registering(Jar::class) {
+        group = LifecycleBasePlugin.BUILD_GROUP
         dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
         archiveClassifier.set("all")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -75,7 +73,7 @@ tasks {
         addTestListener(Rife2TestListener(project.properties["testsBadgeApiKey"]?.toString()))
     }
 
-    withType<Test> {
+    withType<Test>().configureEach {
         useJUnitPlatform()
         testLogging {
             exceptionFormat = TestExceptionFormat.FULL
@@ -100,6 +98,8 @@ tasks {
     }
 
     val copyToDeploy by registering(Sync::class) {
+        description = "Copies all needed files to the 'deploy' directory."
+        group = PublishingPlugin.PUBLISH_TASK_GROUP
         from(configurations.runtimeClasspath) {
             exclude("annotations-*.jar")
         }
@@ -110,9 +110,7 @@ tasks {
     register("deploy") {
         description = "Copies all needed files to the 'deploy' directory."
         group = PublishingPlugin.PUBLISH_TASK_GROUP
-        dependsOn(build, jar)
-        outputs.dir(deployDir)
-        inputs.files(copyToDeploy)
+        dependsOn(build, copyToDeploy)
     }
 
     "sonar" {

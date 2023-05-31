@@ -19,6 +19,5 @@ plugins {
     buildsrc.conventions.base
 }
 
-description = "A simple defensive library to encode/decode URL components"
 group = "net.thauvin.erik"
 version = "1.3.1-SNAPSHOT"
