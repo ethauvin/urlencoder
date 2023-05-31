@@ -33,7 +33,7 @@ dependencies {
 }
 
 base {
-    archivesName.set(rootProject.name)
+    archivesName.set("${rootProject.name}-lib")
 }
 
 tasks {
