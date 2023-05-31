@@ -17,6 +17,9 @@
 
 package buildsrc.conventions
 
+import buildsrc.utils.Rife2TestListener
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.sonarqube.gradle.SonarTask
 
 plugins {
@@ -38,4 +41,13 @@ sonarqube {
 
 tasks.withType<SonarTask>().configureEach {
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
+}
+
+tasks.withType<Test>().configureEach {
+    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
+    addTestListener(Rife2TestListener(testsBadgeApiKey))
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }
