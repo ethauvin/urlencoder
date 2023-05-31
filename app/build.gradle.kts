@@ -15,30 +15,19 @@
  * limitations under the License.
  */
 
-import buildsrc.utils.Rife2TestListener
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 
 plugins {
+    buildsrc.conventions.lang.`kotlin-jvm`
+    buildsrc.conventions.publishing
     id("application")
     id("com.github.ben-manes.versions")
-    id("io.gitlab.arturbosch.detekt")
-    id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.kotlinx.kover")
-
-    buildsrc.conventions.publishing
-    buildsrc.conventions.sonarqube
 }
 
-val mavenName = "UrlEncoder"
+description = "A simple defensive application to encode/decode URL components"
+
 val deployDir = project.layout.projectDirectory.dir("deploy")
-val gitHub = "ethauvin/${rootProject.name}"
-val mavenUrl = "https://github.com/$gitHub"
-val publicationName = "mavenJava"
-val myClassName = "$group.${rootProject.name}.$mavenName"
+val mainClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 dependencies {
     implementation(projects.lib)
@@ -59,7 +48,6 @@ java {
 application {
     mainClass.set(myClassName)
 }
-
 
 tasks {
     jar {
@@ -84,22 +72,6 @@ tasks {
         dependsOn(fatJar)
     }
 
-    withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = java.targetCompatibility.toString()
-    }
-
-    test {
-        addTestListener(Rife2TestListener(project.properties["testsBadgeApiKey"]?.toString()))
-    }
-
-    withType<Test>().configureEach {
-        useJUnitPlatform()
-        testLogging {
-            exceptionFormat = TestExceptionFormat.FULL
-            events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-        }
-    }
-
     withType<GenerateMavenPom>().configureEach {
         destination = file("$projectDir/pom.xml")
     }
@@ -117,6 +89,7 @@ tasks {
     }
 
     val copyToDeploy by registering(Sync::class) {
+        group = PublishingPlugin.PUBLISH_TASK_GROUP
         from(configurations.runtimeClasspath) {
             exclude("annotations-*.jar")
         }
@@ -127,13 +100,7 @@ tasks {
     register("deploy") {
         description = "Copies all needed files to the 'deploy' directory."
         group = PublishingPlugin.PUBLISH_TASK_GROUP
-        dependsOn(build, jar)
-        outputs.dir(deployDir)
-        inputs.files(copyToDeploy)
-    }
-
-    "sonar" {
-        dependsOn(koverReport)
+        dependsOn(build, copyToDeploy)
     }
 }
 
