@@ -2,6 +2,7 @@
 .gradle
 build/
 deploy/
+gradle.properties
 
 ### Kotlin/JVM ###
 *.class
