@@ -2,10 +2,6 @@
 .gradle
 build/
 
-!gradle/wrapper/gradle-wrapper.jar
-!gradle/wrapper/gradle-wrapper.properties
-
-
 ### Kotlin/JVM ###
 *.class
 *.log
@@ -25,11 +21,6 @@ replay_pid*
 
 ### IntelliJ ###
 .idea/**/*
-!.idea/copyright/
-!.idea/copyright/**
-!.idea/inspectionProfiles/
-!.idea/inspectionProfiles/**
-
 
 ### Eclipse ###
 .metadata
@@ -71,3 +62,10 @@ Icon
 
 
 ###########################
+
+# place overrides last, so they're not themselves overridden
+
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+!.idea/copyright/**
