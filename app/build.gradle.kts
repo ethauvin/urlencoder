@@ -27,7 +27,7 @@ plugins {
 description = "A simple defensive application to encode/decode URL components"
 
 val deployDir = project.layout.projectDirectory.dir("deploy")
-val mainClassName = "net.thauvin.erik.urlencoder.UrlEncoder"
+val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 dependencies {
     implementation(projects.lib)
@@ -46,13 +46,13 @@ java {
 }
 
 application {
-    mainClass.set(myClassName)
+    mainClass.set(urlEncoderMainClass)
 }
 
 tasks {
     jar {
         manifest {
-            attributes["Main-Class"] = myClassName
+            attributes["Main-Class"] = urlEncoderMainClass
         }
     }
 
