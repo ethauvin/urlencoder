@@ -2,14 +2,13 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ComplexCondition:UrlEncoder.kt$UrlEncoder$hasOption &amp;&amp; args.size == 2 || !hasOption &amp;&amp; args.size == 1</ID>
-    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0x80</ID>
-    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$0xFF</ID>
-    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$16</ID>
-    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$3</ID>
-    <ID>MagicNumber:UrlEncoder.kt$UrlEncoder$4</ID>
-    <ID>MaxLineLength:UrlEncoder.kt$UrlEncoder$*</ID>
-    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic @JvmOverloads fun decode(source: String, plusToSpace: Boolean = false): String</ID>
-    <ID>NestedBlockDepth:UrlEncoder.kt$UrlEncoder$@JvmStatic @JvmOverloads fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String</ID>
+    <ID>MagicNumber:UrlEncoderUtil.kt$UrlEncoderUtil$0x80</ID>
+    <ID>MagicNumber:UrlEncoderUtil.kt$UrlEncoderUtil$0xFF</ID>
+    <ID>MagicNumber:UrlEncoderUtil.kt$UrlEncoderUtil$16</ID>
+    <ID>MagicNumber:UrlEncoderUtil.kt$UrlEncoderUtil$3</ID>
+    <ID>MagicNumber:UrlEncoderUtil.kt$UrlEncoderUtil$4</ID>
+    <ID>MaxLineLength:UrlEncoderUtil.kt$UrlEncoderUtil$*</ID>
+    <ID>NestedBlockDepth:UrlEncoderUtil.kt$UrlEncoderUtil$@JvmStatic @JvmOverloads fun decode(source: String, plusToSpace: Boolean = false): String</ID>
+    <ID>NestedBlockDepth:UrlEncoderUtil.kt$UrlEncoderUtil$@JvmStatic @JvmOverloads fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String</ID>
   </CurrentIssues>
 </SmellBaseline>

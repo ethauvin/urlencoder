@@ -7,10 +7,9 @@
   <!-- do_not_remove: published-with-gradle-metadata -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>urlencoder</groupId>
-  <artifactId>urlencoder-lib</artifactId>
+  <artifactId>urlencoder</artifactId>
   <version>unspecified</version>
   <name>UrlEncoder for Kotlin</name>
-  <description>A simple defensive library to encode/decode URL components</description>
   <url>https://github.com/ethauvin/urlencoder</url>
   <licenses>
     <license>
@@ -47,6 +46,12 @@
       <artifactId>kotlin-stdlib-jdk8</artifactId>
       <version>1.8.0</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>urlencoder</groupId>
+      <artifactId>urlencoder-lib</artifactId>
+      <version>unspecified</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>
