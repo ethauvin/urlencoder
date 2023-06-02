@@ -17,14 +17,25 @@
 
 package buildsrc.conventions
 
-import buildsrc.utils.Rife2TestListener
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.sonarqube.gradle.SonarTask
+
+/**
+ * Convention plugin for SonarQube analysis.
+ *
+ * SonarQube depends on an aggregated XML coverage report from
+ * [Kotlinx Kover](https://github.com/Kotlin/kotlinx-kover).
+ * See the Kover docs for
+ * [how to aggregate coverage reports](https://kotlin.github.io/kotlinx-kover/gradle-plugin/#multiproject-build).
+ */
 
 plugins {
     id("org.sonarqube")
     id("org.jetbrains.kotlinx.kover")
+}
+
+if (project != rootProject) {
+    logger.warn("The SonarQube convention plugin should only be applied to the root project")
+    // https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner-for-gradle/#analyzing-multi-project-builds
 }
 
 sonarqube {
@@ -39,5 +50,6 @@ sonarqube {
 }
 
 tasks.withType<SonarTask>().configureEach {
+    // workaround for https://github.com/Kotlin/kotlinx-kover/issues/394
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
 }

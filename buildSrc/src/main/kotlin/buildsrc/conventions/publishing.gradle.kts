@@ -84,6 +84,8 @@ signing {
     sign(publishing.publications)
 
     setRequired({
+        // only enable signing for non-snapshot versions, or when publishing to a non-local repo, otherwise
+        // publishing to Maven Local requires signing for users without access to the signing key.
         !isSnapshotVersion() || gradle.taskGraph.hasTask("publish")
     })
 }
@@ -99,6 +101,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 }
 
 val javadocJar by tasks.registering(Jar::class) {
+    description = "Generate Javadoc using Dokka"
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc)
     archiveClassifier.set("javadoc")
