@@ -18,7 +18,6 @@ plugins {
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.kotlinx.kover")
-    id("org.sonarqube")
 }
 
 
