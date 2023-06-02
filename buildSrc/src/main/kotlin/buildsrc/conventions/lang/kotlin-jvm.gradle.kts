@@ -1,15 +1,10 @@
 package buildsrc.conventions.lang
 
 import buildsrc.utils.Rife2TestListener
-import org.gradle.api.JavaVersion
-import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.sonarqube.gradle.SonarTask
 
 /**
  * Common configuration for Kotlin/JVM projects
@@ -20,7 +15,8 @@ import org.sonarqube.gradle.SonarTask
 plugins {
     id("buildsrc.conventions.base")
     kotlin("jvm")
-    id("buildsrc.conventions.code-quality")
+    id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 java {
@@ -39,4 +35,11 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+
+    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
+    addTestListener(Rife2TestListener(testsBadgeApiKey))
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }

@@ -17,7 +17,13 @@
 
 plugins {
     buildsrc.conventions.base
+    buildsrc.conventions.sonarqube
 }
 
 group = "net.thauvin.erik"
 version = "1.4.0-SNAPSHOT"
+
+dependencies {
+    kover(projects.app)
+    kover(projects.lib)
+}

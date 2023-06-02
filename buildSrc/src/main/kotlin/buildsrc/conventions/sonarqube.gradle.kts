@@ -24,7 +24,6 @@ import org.sonarqube.gradle.SonarTask
 
 plugins {
     id("org.sonarqube")
-    id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.kotlinx.kover")
 }
 
@@ -41,13 +40,4 @@ sonarqube {
 
 tasks.withType<SonarTask>().configureEach {
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
-}
-
-tasks.withType<Test>().configureEach {
-    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
-    addTestListener(Rife2TestListener(testsBadgeApiKey))
-    testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
 }

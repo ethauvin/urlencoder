@@ -1,5 +1,8 @@
 package buildsrc.conventions.lang
 
+import buildsrc.utils.Rife2TestListener
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 
@@ -13,6 +16,8 @@ import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 plugins {
     id("buildsrc.conventions.base")
     kotlin("multiplatform")
+    id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 
@@ -41,5 +46,14 @@ kotlin {
 //         languageVersion =
 //         apiVersion =
         }
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
+    addTestListener(Rife2TestListener(testsBadgeApiKey))
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
