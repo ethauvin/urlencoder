@@ -17,7 +17,6 @@ plugins {
     kotlin("jvm")
     id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.kotlinx.kover")
-    id("org.sonarqube")
 }
 
 java {

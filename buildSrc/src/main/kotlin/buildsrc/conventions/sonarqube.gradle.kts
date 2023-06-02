@@ -33,11 +33,6 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-//if (project != rootProject) {
-//    logger.warn("The SonarQube convention plugin should only be applied to the root project")
-//    // https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner-for-gradle/#analyzing-multi-project-builds
-//}
-
 sonarqube {
     properties {
         property("sonar.projectName", rootProject.name)
