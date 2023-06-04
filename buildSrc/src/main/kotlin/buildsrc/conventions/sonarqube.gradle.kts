@@ -33,7 +33,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-sonarqube {
+sonar {
     properties {
         property("sonar.projectName", rootProject.name)
         property("sonar.projectKey", "ethauvin_${rootProject.name}")
