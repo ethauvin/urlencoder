@@ -79,7 +79,3 @@ publishing {
         }
     }
 }
-
-sonar {
-//    isSkipProject = true
-}
