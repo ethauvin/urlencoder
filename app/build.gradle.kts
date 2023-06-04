@@ -111,3 +111,7 @@ publishing {
         }
     }
 }
+
+sonar {
+    isSkipProject = true
+}
