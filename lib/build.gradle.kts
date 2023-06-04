@@ -81,5 +81,5 @@ publishing {
 }
 
 sonar {
-    isSkipProject = true
+//    isSkipProject = true
 }
