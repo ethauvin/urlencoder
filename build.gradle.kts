@@ -17,6 +17,7 @@
 
 plugins {
     buildsrc.conventions.base
+    buildsrc.conventions.sonarqube
 }
 
 group = "net.thauvin.erik"
