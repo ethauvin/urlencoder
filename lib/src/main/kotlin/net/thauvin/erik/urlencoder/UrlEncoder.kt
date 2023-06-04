@@ -65,7 +65,7 @@ object UrlEncoder {
     // see https://www.rfc-editor.org/rfc/rfc3986#page-13
     // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
     private fun Char.isUnreserved(): Boolean {
-        return this <= 'z' && unreservedChars.get(code)
+        return this <= 'z' && unreservedChars[code]
     }
 
     private fun StringBuilder.appendEncodedDigit(digit: Int) {
@@ -171,25 +171,29 @@ object UrlEncoder {
                     out.append(source, 0, i)
                 }
                 val cp = source.codePointAt(i)
-                if (cp < 0x80) {
-                    if (spaceToPlus && ch == ' ') {
-                        out.append('+')
-                    } else {
-                        out.appendEncodedByte(cp)
+                when {
+                    cp < 0x80 -> {
+                        if (spaceToPlus && ch == ' ') {
+                            out.append('+')
+                        } else {
+                            out.appendEncodedByte(cp)
+                        }
+                        i++
                     }
-                    i++
-                } else if (Character.isBmpCodePoint(cp)) {
-                    for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
-                        out.appendEncodedByte(b.toInt())
+                    Character.isBmpCodePoint(cp) -> {
+                        for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
+                            out.appendEncodedByte(b.toInt())
+                        }
+                        i++
                     }
-                    i++
-                } else if (Character.isSupplementaryCodePoint(cp)) {
-                    val high = Character.highSurrogate(cp)
-                    val low = Character.lowSurrogate(cp)
-                    for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
-                        out.appendEncodedByte(b.toInt())
+                    Character.isSupplementaryCodePoint(cp) -> {
+                        val high = Character.highSurrogate(cp)
+                        val low = Character.lowSurrogate(cp)
+                        for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
+                            out.appendEncodedByte(b.toInt())
+                        }
+                        i += 2
                     }
-                    i += 2
                 }
             }
         }
