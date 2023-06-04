@@ -20,6 +20,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     buildsrc.conventions.lang.`kotlin-jvm`
     buildsrc.conventions.publishing
+    buildsrc.conventions.sonarqube
     id("application")
     id("com.github.ben-manes.versions")
 }
