@@ -18,7 +18,7 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    buildsrc.conventions.lang.`kotlin-jvm`
+    buildsrc.conventions.lang.`kotlin-multiplatform-jvm`
     buildsrc.conventions.publishing
     buildsrc.conventions.sonarqube
     id("application")
@@ -30,13 +30,21 @@ description = "A simple defensive application to encode/decode URL components"
 val deployDir = project.layout.projectDirectory.dir("deploy")
 val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
-dependencies {
-    implementation(projects.lib)
-    kover(projects.lib)
-
-//    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-//    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-    testImplementation(kotlin("test"))
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.urlencoderLib)
+            }
+        }
+        jvmTest {
+            dependencies {
+                //implementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+                //implementation("org.junit.jupiter:junit-jupiter:5.9.1")
+                implementation(kotlin("test"))
+            }
+        }
+    }
 }
 
 base {
@@ -48,7 +56,7 @@ application {
 }
 
 tasks {
-    jar {
+    jvmJar {
         manifest {
             attributes["Main-Class"] = urlEncoderMainClass
         }
@@ -56,13 +64,13 @@ tasks {
 
     val fatJar by registering(Jar::class) {
         group = LifecycleBasePlugin.BUILD_GROUP
-        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
+        dependsOn.addAll(listOf("compileJava", "compileKotlinJvm", "processResources"))
         archiveClassifier.set("all")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
         from(sourceSets.main.get().output)
-        dependsOn(configurations.runtimeClasspath)
-        from(configurations.runtimeClasspath.map { classpath ->
+        dependsOn(configurations.jvmRuntimeClasspath)
+        from(configurations.jvmRuntimeClasspath.map { classpath ->
             classpath.incoming.artifacts.artifactFiles.files.filter { it.name.endsWith("jar") }.map { zipTree(it) }
         })
     }
@@ -71,28 +79,22 @@ tasks {
         dependsOn(fatJar)
     }
 
-    withType<GenerateMavenPom>().configureEach {
-        destination = file("$projectDir/pom.xml")
-    }
-
     clean {
         delete(deployDir)
     }
 
     withType<DokkaTask>().configureEach {
-        dokkaSourceSets {
-            named("main") {
-                moduleName.set("UrlEncoder Application")
-            }
+        dokkaSourceSets.configureEach {
+            moduleName.set("UrlEncoder Application")
         }
     }
 
     val copyToDeploy by registering(Sync::class) {
         group = PublishingPlugin.PUBLISH_TASK_GROUP
-        from(configurations.runtimeClasspath) {
+        from(configurations.jvmRuntimeClasspath) {
             exclude("annotations-*.jar")
         }
-        from(jar)
+        from(jvmJar)
         into(deployDir)
     }
 
@@ -100,15 +102,5 @@ tasks {
         description = "Copies all needed files to the 'deploy' directory."
         group = PublishingPlugin.PUBLISH_TASK_GROUP
         dependsOn(build, copyToDeploy)
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifactId = rootProject.name
-            artifact(tasks.javadocJar)
-        }
     }
 }

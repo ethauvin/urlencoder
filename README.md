@@ -63,7 +63,7 @@ dependencies {
 ```
 
 Instructions for using with Maven, Ivy, etc. can be found
-on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder).
+on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder-jvm).
 
 ## Standalone usage
 
@@ -85,10 +85,10 @@ Encode and decode URL components defensively.
 ### Running with Gradle
 
 ```shell
-./gradlew run --args="-e 'a test &'"        # -> a%20test%20%26
-./gradlew run --args="%#okékÉȢ"             # -> %25%23ok%C3%A9k%C3%89%C8%A2
+./gradlew run --quiet --args="-e 'a test &'"        # -> a%20test%20%26
+./gradlew run --quiet --args="%#okékÉȢ"             # -> %25%23ok%C3%A9k%C3%89%C8%A2
 
-./gradlew run --args="-d 'a%20test%20%26'"  # -> a test &
+./gradlew run --quiet --args="-d 'a%20test%20%26'"  # -> a test &
 ```
 
 ### Running with Java
@@ -96,23 +96,23 @@ Encode and decode URL components defensively.
 First build the jar file:
 
 ```shell
-./gradlew clean fatJar
+./gradlew fatJar
 ```
 
 Then run it:
 
 ```shell
-java -jar lib/build/libs/urlencoder-*all.jar -e "a test &"       # -> a%20test%20%26
-java -jar lib/build/libs/urlencoder-*all.jar "%#okékÉȢ"          # -> %25%23ok%C3%A9k%C3%89%C8%A2
+java -jar urlencoder-app/build/libs/urlencoder-*all.jar -e "a test &"       # -> a%20test%20%26
+java -jar urlencoder-app/build/libs/urlencoder-*all.jar "%#okékÉȢ"          # -> %25%23ok%C3%A9k%C3%89%C8%A2
 
-java -jar lib/build/libs/urlencoder-*.all.jar -d "a%20test%20%26" # -> a test &
+java -jar urlencoder-app/build/libs/urlencoder-*all.jar -d "a%20test%20%26" # -> a test &
 ```
 
 ## Why not simply use `java.net.URLEncoder`?
 
 Apart for being quite inefficient, some URL components encoded with `URLEncoder.encode` might not be able to be properly decoded.
 
-For example, a simply search query such as:
+For example, a simple search query such as:
 
 ```kotlin
 val u = URLEncoder.encode("foo +bar", StandardCharsets.UTF_8)
@@ -139,4 +139,3 @@ foo++bar
 Unfortunately, decoding with [Uri.decode](https://developer.android.com/reference/android/net/Uri#decode(java.lang.String)) on Android, [decodeURI](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURI) in Javascript, etc. would yield the exact same result.
 
 ![URLEncoder](https://live.staticflickr.com/65535/52607534147_6197b42666_z.jpg)
-

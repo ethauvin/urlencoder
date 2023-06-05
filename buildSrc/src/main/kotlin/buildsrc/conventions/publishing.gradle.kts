@@ -89,6 +89,7 @@ signing {
         !isSnapshotVersion() || gradle.taskGraph.hasTask("publish")
     })
 }
+
 tasks.withType<Sign>().configureEach {
     val signingRequiredPredicate = provider { signing.isRequired }
     onlyIf { signingRequiredPredicate.get() }
@@ -105,4 +106,10 @@ val javadocJar by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)
     from(tasks.dokkaJavadoc)
     archiveClassifier.set("javadoc")
+}
+
+publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifact(javadocJar)
+    }
 }

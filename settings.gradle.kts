@@ -23,6 +23,6 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
-  ":app",
-  ":lib",
+  ":urlencoder-app",
+  ":urlencoder-lib",
 )
