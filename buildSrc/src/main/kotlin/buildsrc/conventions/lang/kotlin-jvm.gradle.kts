@@ -42,4 +42,6 @@ tasks.withType<Test>().configureEach {
         exceptionFormat = TestExceptionFormat.FULL
         events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
+
+    finalizedBy(tasks.matching { it.name == "koverXmlReport" })
 }

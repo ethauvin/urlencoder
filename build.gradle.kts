@@ -22,3 +22,20 @@ plugins {
 
 group = "net.thauvin.erik"
 version = "1.4.0-SNAPSHOT"
+
+dependencies {
+    kover(projects.lib)
+    kover(projects.app)
+}
+
+sonar {
+    properties {
+        property("sonar.projectName", rootProject.name)
+        property("sonar.projectKey", "ethauvin_${rootProject.name}")
+        property("sonar.organization", "ethauvin-github")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
+        property("sonar.log.level", "DEBUG")
+    }
+}
