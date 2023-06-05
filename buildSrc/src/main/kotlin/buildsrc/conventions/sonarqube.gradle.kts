@@ -33,21 +33,8 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-sonar {
-    properties {
-        property("sonar.projectName", rootProject.name)
-        property("sonar.projectKey", "ethauvin_${rootProject.name}")
-        property("sonar.organization", "ethauvin-github")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.sources", files("src/main/kotlin"))
-        property("sonar.test", files("src/test/kotlin"))
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
-        property("sonar.log.level", "DEBUG")
-    }
-}
-
 tasks.withType<SonarTask>().configureEach {
+    dependsOn(tasks.withType<Test>())
     // workaround for https://github.com/Kotlin/kotlinx-kover/issues/394
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
 }
