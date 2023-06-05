@@ -17,6 +17,7 @@
 
 package buildsrc.conventions
 
+import org.sonarqube.gradle.SonarExtension.SONAR_DEPRECATED_TASK_NAME
 import org.sonarqube.gradle.SonarTask
 
 /**
@@ -37,4 +38,9 @@ tasks.withType<SonarTask>().configureEach {
     dependsOn(tasks.withType<Test>())
     // workaround for https://github.com/Kotlin/kotlinx-kover/issues/394
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
+}
+
+tasks.matching { it.name == SONAR_DEPRECATED_TASK_NAME }.configureEach {
+    // this task is deprecated, use 'sonar' instead
+    group = "other"
 }
