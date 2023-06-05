@@ -17,18 +17,23 @@
 
 package buildsrc.conventions
 
-import buildsrc.utils.Rife2TestListener
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.sonarqube.gradle.SonarTask
+
+/**
+ * Convention plugin for SonarQube analysis.
+ *
+ * SonarQube depends on an aggregated XML coverage report from
+ * [Kotlinx Kover](https://github.com/Kotlin/kotlinx-kover).
+ * See the Kover docs for
+ * [how to aggregate coverage reports](https://kotlin.github.io/kotlinx-kover/gradle-plugin/#multiproject-build).
+ */
 
 plugins {
     id("org.sonarqube")
-    id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.kotlinx.kover")
 }
 
-sonarqube {
+sonar {
     properties {
         property("sonar.projectName", rootProject.name)
         property("sonar.projectKey", "ethauvin_${rootProject.name}")
@@ -43,14 +48,6 @@ sonarqube {
 }
 
 tasks.withType<SonarTask>().configureEach {
+    // workaround for https://github.com/Kotlin/kotlinx-kover/issues/394
     dependsOn(tasks.matching { it.name == "koverXmlReport" })
-}
-
-tasks.withType<Test>().configureEach {
-    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
-    addTestListener(Rife2TestListener(testsBadgeApiKey))
-    testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
 }

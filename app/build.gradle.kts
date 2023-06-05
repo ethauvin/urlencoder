@@ -21,23 +21,55 @@ plugins {
     buildsrc.conventions.lang.`kotlin-jvm`
     buildsrc.conventions.publishing
     buildsrc.conventions.sonarqube
+    id("application")
     id("com.github.ben-manes.versions")
 }
 
-description = "A simple defensive library to encode/decode URL components"
+description = "A simple defensive application to encode/decode URL components"
 
 val deployDir = project.layout.projectDirectory.dir("deploy")
+val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 dependencies {
+    implementation(projects.lib)
+    kover(projects.lib)
+
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 }
 
 base {
-    archivesName.set("${rootProject.name}-lib")
+    archivesName.set(rootProject.name)
+}
+
+application {
+    mainClass.set(urlEncoderMainClass)
 }
 
 tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = urlEncoderMainClass
+        }
+    }
+
+    val fatJar by registering(Jar::class) {
+        group = LifecycleBasePlugin.BUILD_GROUP
+        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
+        archiveClassifier.set("all")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
+        from(sourceSets.main.get().output)
+        dependsOn(configurations.runtimeClasspath)
+        from(configurations.runtimeClasspath.map { classpath ->
+            classpath.incoming.artifacts.artifactFiles.files.filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        })
+    }
+
+    build {
+        dependsOn(fatJar)
+    }
+
     withType<GenerateMavenPom>().configureEach {
         destination = file("$projectDir/pom.xml")
     }
@@ -49,7 +81,7 @@ tasks {
     withType<DokkaTask>().configureEach {
         dokkaSourceSets {
             named("main") {
-                moduleName.set("UrlEncoder Library")
+                moduleName.set("UrlEncoder Application")
             }
         }
     }
@@ -74,7 +106,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifactId = "${rootProject.name}-lib"
+            artifactId = rootProject.name
             artifact(tasks.javadocJar)
         }
     }

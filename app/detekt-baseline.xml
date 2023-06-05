@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:UrlEncoder.kt$UrlEncoder$hasOption &amp;&amp; args.size == 2 || !hasOption &amp;&amp; args.size == 1</ID>
+    <ID>MaxLineLength:UrlEncoder.kt$UrlEncoder$*</ID>
+  </CurrentIssues>
+</SmellBaseline>
