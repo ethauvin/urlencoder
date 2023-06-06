@@ -10,3 +10,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.1")
     implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.2.0.3129")
 }
+
+dependencyLocking {
+    lockMode.set(LockMode.STRICT)
+    lockAllConfigurations()
+}

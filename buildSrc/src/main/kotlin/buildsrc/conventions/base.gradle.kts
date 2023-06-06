@@ -16,3 +16,8 @@ tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
+
+dependencyLocking {
+    lockMode.set(LockMode.STRICT)
+    lockAllConfigurations()
+}
