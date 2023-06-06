@@ -13,5 +13,11 @@ dependencies {
 
 dependencyLocking {
     lockMode.set(LockMode.STRICT)
-    lockAllConfigurations()
+}
+
+configurations {
+    // only lock compile & runtime to prevent error:
+    // Locking strict mode: Configuration ':buildSrc:testCompileClasspath' is locked but does not have lock state.
+    compileClasspath { resolutionStrategy.activateDependencyLocking() }
+    runtimeClasspath { resolutionStrategy.activateDependencyLocking() }
 }
