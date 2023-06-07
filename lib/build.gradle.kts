@@ -30,7 +30,8 @@ val deployDir = project.layout.projectDirectory.dir("deploy")
 
 dependencies {
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation(kotlin("test"))
 }
 
 base {

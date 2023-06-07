@@ -19,55 +19,53 @@ package net.thauvin.erik.urlencoder
 
 import net.thauvin.erik.urlencoder.UrlEncoderUtil.decode
 import net.thauvin.erik.urlencoder.UrlEncoderUtil.encode
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.Arguments.arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
+import kotlin.test.*
+import kotlin.test.DefaultAsserter.assertEquals
+import kotlin.test.DefaultAsserter.assertSame
 
 class UrlEncoderUtilTest {
     private val same = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_."
 
     companion object {
         @JvmStatic
-        fun invalid() = arrayOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
+        var invalid = arrayOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
 
         @JvmStatic
-        fun validMap(): Stream<Arguments> = Stream.of(
-            arguments("a test &", "a%20test%20%26"),
-            arguments(
+        var validMap = arrayOf(
+            Pair("a test &", "a%20test%20%26"),
+            Pair(
                 "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=",
                 "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D"
             ),
-            arguments("%#okékÉȢ smile!😁", "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81"),
-            arguments(
+            Pair("%#okékÉȢ smile!😁", "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81"),
+            Pair(
                 "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00", "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80"
             )
         )
     }
 
-    @ParameterizedTest(name = "decode({0}) should be {1}")
-    @MethodSource("validMap")
-    fun `Decode URL`(expected: String, source: String) {
-        assertEquals(expected, decode(source))
+    @Test
+    fun `Decode URL`() {
+        for (m in validMap) {
+            assertEquals(m.first, decode(m.second))
+        }
     }
 
-    @ParameterizedTest(name = "decode({0})")
-    @MethodSource("invalid")
-    fun `Decode with Exception`(source: String) {
-        assertThrows(IllegalArgumentException::class.java, { decode(source) }, "decode($source)")
+    @Test
+    fun `Decode with Exception`() {
+        for (source in invalid) {
+            assertFailsWith<IllegalArgumentException>(
+                message = "decode($source)",
+                block = { decode(source) }
+            )
+        }
     }
 
     @Test
     fun `Decode when None needed`() {
         assertSame(same, decode(same))
-        assertEquals("", decode(""), "decode('')")
-        assertEquals(" ", decode(" "), "decode(' ')")
+        assertEquals("decode('')", decode(""), "")
+        assertEquals("decode(' ')", decode(" "), " ")
     }
 
     @Test
@@ -79,30 +77,32 @@ class UrlEncoderUtilTest {
         assertEquals("foo+bar", decode("foo%2Bbar", plusToSpace = true))
     }
 
-    @ParameterizedTest(name = "encode({0}) should be {1}")
-    @MethodSource("validMap")
-    fun `Encode URL`(source: String, expected: String) {
-        assertEquals(expected, encode(source))
+
+    @Test
+    fun `Encode URL`() {
+        for (m in validMap) {
+            assertEquals(m.second, encode(m.first))
+        }
     }
 
     @Test
     fun `Encode Empty or Blank`() {
         assertTrue(encode("", allow = "").isEmpty(), "encode('','')")
-        assertEquals("", encode(""), "encode('')")
-        assertEquals("%20", encode(" "), "encode(' ')")
+        assertEquals("encode('')", encode(""), "")
+        assertEquals("encode(' ')", encode(" "), "%20")
     }
 
     @Test
     fun `Encode when None needed`() {
-        assertSame(same, encode(same))
-        assertSame(same, encode(same, allow = ""), "with empty allow")
+        assertSame(encode(same), same)
+        assertSame("with empty allow", encode(same, allow = ""), same)
     }
 
     @Test
     fun `Encode with Allow Arg`() {
-        assertEquals("?test=a%20test", encode("?test=a test", allow = "=?"), "encode(x, =?)")
-        assertEquals("aaa", encode("aaa", "a"), "encode(aaa, a)")
-        assertEquals(" ", encode(" ",  " "), "encode(' ', ' ')")
+        assertEquals("encode(x, =?)","?test=a%20test", encode("?test=a test", allow = "=?"))
+        assertEquals("encode(aaa, a)", "aaa", encode("aaa", "a"))
+        assertEquals("encode(' ')", " ", encode(" ", " ") )
     }
 
     @Test

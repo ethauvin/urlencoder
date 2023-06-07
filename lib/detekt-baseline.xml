@@ -10,5 +10,6 @@
     <ID>MaxLineLength:UrlEncoderUtil.kt$UrlEncoderUtil$*</ID>
     <ID>NestedBlockDepth:UrlEncoderUtil.kt$UrlEncoderUtil$@JvmStatic @JvmOverloads fun decode(source: String, plusToSpace: Boolean = false): String</ID>
     <ID>NestedBlockDepth:UrlEncoderUtil.kt$UrlEncoderUtil$@JvmStatic @JvmOverloads fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String</ID>
+    <ID>WildcardImport:UrlEncoderUtilTest.kt$import kotlin.test.*</ID>
   </CurrentIssues>
 </SmellBaseline>
