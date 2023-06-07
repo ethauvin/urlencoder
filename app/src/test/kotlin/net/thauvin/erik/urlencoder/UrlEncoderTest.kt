@@ -19,64 +19,64 @@ package net.thauvin.erik.urlencoder
 
 import net.thauvin.erik.urlencoder.UrlEncoder.processMain
 import net.thauvin.erik.urlencoder.UrlEncoder.usage
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.Arguments.arguments
-import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.provider.ValueSource
-import java.util.stream.Stream
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class UrlEncoderTest {
-
     companion object {
         @JvmStatic
-        fun invalid() = arrayOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
+        var invalid = arrayOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
 
         @JvmStatic
-        fun validMap(): Stream<Arguments> = Stream.of(
-            arguments("a test &", "a%20test%20%26"),
-            arguments(
+        var validMap = arrayOf(
+            Pair("a test &", "a%20test%20%26"),
+            Pair(
                 "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=",
                 "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D"
             ),
-            arguments("%#okékÉȢ smile!😁", "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81"),
-            arguments(
+            Pair("%#okékÉȢ smile!😁", "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81"),
+            Pair(
                 "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00", "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80"
             )
         )
     }
 
-    @ParameterizedTest(name = "processMain(-d {1}) should be {0}")
-    @MethodSource("validMap")
-    fun `Main Decode`(expected: String, source: String) {
-        val result: UrlEncoder.MainResult = processMain(arrayOf("-d", source))
-        assertEquals(expected, result.output)
-        assertEquals(0, result.status, "processMain(-d $source).status")
+    @Test
+    fun `Main Decode`() {
+        for (m in validMap) {
+            val result: UrlEncoder.MainResult = processMain(arrayOf("-d", m.second))
+            assertEquals(m.first, result.output)
+            assertEquals(0, result.status, "processMain(-d ${m.second}).status")
+        }
     }
 
-    @ParameterizedTest(name = "processMain(-d {0})")
-    @MethodSource("invalid")
-    fun `Main Decode with Exception`(source: String) {
-        assertThrows(IllegalArgumentException::class.java, { processMain(arrayOf("-d", source)) }, source)
+    @Test
+    fun `Main Decode with Exception`() {
+        for (source in invalid) {
+            assertFailsWith<IllegalArgumentException>(
+                message = source,
+                block = { processMain(arrayOf("-d", source)) }
+            )
+        }
     }
 
-    @ParameterizedTest(name = "processMain(-e {0})")
-    @MethodSource("validMap")
-    fun `Main Encode`(source: String, expected: String) {
-        val result = processMain(arrayOf(source))
-        assertEquals(expected, result.output)
-        assertEquals(0, result.status, "processMain(-e $source).status")
+    @Test
+    fun `Main Encode`() {
+        for (m in validMap) {
+            val result = processMain(arrayOf(m.first))
+            assertEquals(m.second, result.output)
+            assertEquals(0, result.status, "processMain(-e ${m.first}).status")
+        }
     }
 
-    @ParameterizedTest(name = "processMain(-e {0})")
-    @MethodSource("validMap")
-    fun `Main Encode with Option`(source: String, expected: String) {
-        val result = processMain(arrayOf("-e", source))
-        assertEquals(expected, result.output)
-        assertEquals(0, result.status, "processMain(-e $source).status")
+    @Test
+    fun `Main Encode with Option`() {
+        for (m in validMap) {
+            val result = processMain(arrayOf("-e", m.first))
+            assertEquals(m.second, result.output)
+            assertEquals(0, result.status, "processMain(-e ${m.first}).status")
+        }
     }
 
 
@@ -90,13 +90,13 @@ class UrlEncoderTest {
         assertEquals(" ", processMain(arrayOf("-d", " ")).output, "processMain('-d', ' ')")
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["", "-d", "-e"])
-    fun `Main Usage with Invalid arg`(arg: String) {
-        val result = processMain(arrayOf(arg))
-        assertEquals(usage, result.output, "processMain('$arg')")
-        assertEquals(1, result.status, "processMain('$arg').status")
-    }
+    @Test
+    fun `Main Usage with Invalid arg`() {
+        for (arg in arrayOf("", "-d", "-e")) {
+            val result = processMain(arrayOf(arg))
+            assertEquals(usage, result.output, "processMain('$arg')")
+            assertEquals(1, result.status, "processMain('$arg').status")
+        }}
 
     @Test
     fun `Main Usage with too Many Args`() {

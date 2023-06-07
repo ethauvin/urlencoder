@@ -34,7 +34,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
+//    useJUnitPlatform()
 
     val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
     addTestListener(Rife2TestListener(testsBadgeApiKey))

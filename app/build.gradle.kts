@@ -35,7 +35,8 @@ dependencies {
     kover(projects.lib)
 
 //    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation(kotlin("test"))
 }
 
 base {
