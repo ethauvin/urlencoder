@@ -35,8 +35,7 @@ sonar {
         property("sonar.organization", "ethauvin-github")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.coverage.jacoco.xmlReportPaths",
-            "build/reports/kover/report.xml,${project.rootDir}/app/build/reports/kover/report.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/report.xml")
         property("sonar.log.level", "DEBUG")
     }
 }

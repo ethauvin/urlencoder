@@ -43,6 +43,23 @@ class UrlEncoderTest {
     }
 
     @Test
+    fun `Encode no options`() {
+        for (m in validMap) {
+            assertEquals(m.second, UrlEncoder.encode(m.first), "encode(${m.first})")
+        }
+    }
+
+    @Test
+    fun `Encode with SpaceToPlus`() {
+        assertEquals("this+is+a+test", UrlEncoder.encode("this is a test", spaceToPlus = true))
+    }
+
+    @Test
+    fun `Encode with allow`() {
+        assertEquals("this is a test", UrlEncoder.encode("this is a test", allow = " "))
+    }
+
+    @Test
     fun `Main Decode`() {
         for (m in validMap) {
             val result: UrlEncoder.MainResult = processMain(arrayOf("-d", m.second))
@@ -96,7 +113,8 @@ class UrlEncoderTest {
             val result = processMain(arrayOf(arg))
             assertEquals(usage, result.output, "processMain('$arg')")
             assertEquals(1, result.status, "processMain('$arg').status")
-        }}
+        }
+    }
 
     @Test
     fun `Main Usage with too Many Args`() {
