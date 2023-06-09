@@ -77,7 +77,6 @@ class UrlEncoderUtilTest {
         assertEquals("foo+bar", decode("foo%2Bbar", plusToSpace = true))
     }
 
-
     @Test
     fun `Encode URL`() {
         for (m in validMap) {
@@ -99,7 +98,7 @@ class UrlEncoderUtilTest {
     }
 
     @Test
-    fun `Encode with Allow Arg`() {
+    fun `Encode with Allow`() {
         assertEquals("encode(x, =?)","?test=a%20test", encode("?test=a test", allow = "=?"))
         assertEquals("encode(aaa, a)", "aaa", encode("aaa", "a"))
         assertEquals("encode(' ')", " ", encode(" ", " ") )

@@ -43,20 +43,20 @@ class UrlEncoderTest {
     }
 
     @Test
-    fun `Encode no options`() {
-        for (m in validMap) {
-            assertEquals(m.second, UrlEncoder.encode(m.first), "encode(${m.first})")
-        }
-    }
-
-    @Test
     fun `Encode with SpaceToPlus`() {
         assertEquals("this+is+a+test", UrlEncoder.encode("this is a test", spaceToPlus = true))
     }
 
     @Test
-    fun `Encode with allow`() {
+    fun `Encode with Allow`() {
         assertEquals("this is a test", UrlEncoder.encode("this is a test", allow = " "))
+    }
+
+    @Test
+    fun `Encode without Parameters`() {
+        for (m in validMap) {
+            assertEquals(m.second, UrlEncoder.encode(m.first), "encode(${m.first})")
+        }
     }
 
     @Test
@@ -95,7 +95,6 @@ class UrlEncoderTest {
             assertEquals(0, result.status, "processMain(-e ${m.first}).status")
         }
     }
-
 
     @Test
     fun `Main Usage with Empty Args`() {
