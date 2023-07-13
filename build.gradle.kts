@@ -17,6 +17,7 @@
 
 plugins {
     buildsrc.conventions.base
+    id("org.jetbrains.kotlinx.kover")
 }
 
 group = "net.thauvin.erik"
