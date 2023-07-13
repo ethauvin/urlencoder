@@ -8,7 +8,6 @@ jobs:
 
     env:
       GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
-      SONAR_JDK: "11"
 
     strategy:
       matrix:
@@ -28,22 +27,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Cache SonarCloud packages
-        if: matrix.java-version == env.SONAR_JDK
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       - name: Test with Gradle
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build check --stacktrace -PtestsBadgeApiKey=${{ secrets.TESTS_BADGE_API_KEY }}
-
-      - name: SonarCloud
-        if: success() && matrix.java-version == env.SONAR_JDK
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar --info -Dsonar.verbose=true
