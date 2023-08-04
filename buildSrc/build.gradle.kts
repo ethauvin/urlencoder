@@ -9,3 +9,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
     implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.1")
 }
+
+dependencyLocking {
+    lockMode.set(LockMode.STRICT)
+}
+
+configurations {
+    // only lock compile & runtime to prevent error:
+    // Locking strict mode: Configuration ':buildSrc:testCompileClasspath' is locked but does not have lock state.
+    compileClasspath { resolutionStrategy.activateDependencyLocking() }
+    runtimeClasspath { resolutionStrategy.activateDependencyLocking() }
+}

@@ -24,6 +24,6 @@ group = "net.thauvin.erik"
 version = "1.4.0-SNAPSHOT"
 
 dependencies {
-    kover(projects.lib)
-    kover(projects.app)
+    kover(projects.urlencoderLib)
+    kover(projects.urlencoderApp)
 }

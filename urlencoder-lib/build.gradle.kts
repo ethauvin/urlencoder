@@ -18,7 +18,7 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    buildsrc.conventions.lang.`kotlin-jvm`
+    buildsrc.conventions.lang.`kotlin-multiplatform-jvm`
     buildsrc.conventions.publishing
     id("com.github.ben-manes.versions")
 }
@@ -27,30 +27,32 @@ description = "A simple defensive library to encode/decode URL components"
 
 val deployDir = project.layout.projectDirectory.dir("deploy")
 
-dependencies {
-//    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-//    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-    testImplementation(kotlin("test"))
+kotlin {
+    sourceSets {
+        jvmTest {
+            dependencies {
+                //implementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+                //implementation("org.junit.jupiter:junit-jupiter:5.9.1")
+                implementation(kotlin("test"))
+            }
+        }
+    }
 }
+
 
 base {
     archivesName.set("${rootProject.name}-lib")
 }
 
 tasks {
-    withType<GenerateMavenPom>().configureEach {
-        destination = file("$projectDir/pom.xml")
-    }
 
     clean {
         delete(deployDir)
     }
 
     withType<DokkaTask>().configureEach {
-        dokkaSourceSets {
-            named("main") {
-                moduleName.set("UrlEncoder Library")
-            }
+        dokkaSourceSets.configureEach {
+            moduleName.set("UrlEncoder Library")
         }
     }
 
@@ -59,7 +61,7 @@ tasks {
         from(configurations.runtimeClasspath) {
             exclude("annotations-*.jar")
         }
-        from(jar)
+        from(jvmJar)
         into(deployDir)
     }
 
@@ -67,15 +69,5 @@ tasks {
         description = "Copies all needed files to the 'deploy' directory."
         group = PublishingPlugin.PUBLISH_TASK_GROUP
         dependsOn(build, copyToDeploy)
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifactId = "${rootProject.name}-lib"
-            artifact(tasks.javadocJar)
-        }
     }
 }
