@@ -19,6 +19,8 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     buildsrc.conventions.lang.`kotlin-multiplatform-jvm`
+    buildsrc.conventions.lang.`kotlin-multiplatform-js`
+    buildsrc.conventions.lang.`kotlin-multiplatform-native`
     buildsrc.conventions.publishing
     id("com.github.ben-manes.versions")
 }
