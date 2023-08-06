@@ -10,7 +10,7 @@
 
 # URL Encoder for Kotlin
 
-A simple defensive library to encode/decode URL components.
+UrlEncoder is a simple defensive Kotlin Multiplatform library to encode/decode URL components.
 
 This library was adapted from the [RIFE2 Web Application Framework](https://rife2.com).  
 A pure Java version can also be found at [https://github.com/gbevin/urlencoder](https://github.com/gbevin/urlencoder).
@@ -51,19 +51,34 @@ UrlEncoder.decode("foo+bar", plusToSpace = true) // -> foo bar
 
 To use with [Gradle](https://gradle.org/), include the following dependency in your build file:
 
-```gradle
+```kotlin
 repositories {
     mavenCentral()
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") } // only needed for SNAPSHOT
+    // only needed for SNAPSHOT
+    maven("https://oss.sonatype.org/content/repositories/snapshots") { 
+      name = "SonatypeSnapshots"
+      mavenContent { snapshotsOnly() }
+    }
 }
 
 dependencies {
-    implementation("net.thauvin.erik:urlencoder:1.3.0")
+    implementation("net.thauvin.erik:urlencoder-lib:1.3.0")
 }
 ```
 
-Instructions for using with Maven, Ivy, etc. can be found
-on [Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder-jvm).
+Adding a dependency in [Maven](https://maven.apache.org/) requires specifying the JVM variant by adding a `-jvm` suffix
+to the artifact URL.
+
+```xml
+<dependency>
+    <groupId>net.thauvin.erik</groupId>
+    <artifactId>urlencoder-lib-jvm</artifactId>
+    <version>1.3.0</version>
+</dependency>
+```
+
+Instructions for using with Maven, Ivy, etc. can be found on 
+[Maven Central](https://search.maven.org/artifact/net.thauvin.erik/urlencoder).
 
 ## Standalone usage
 
@@ -127,7 +142,7 @@ foo+%2Bbar
 Trying to decode it with [Spring](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/util/UriUtils.html#decode(java.lang.String,java.lang.String)), for example:
 
 ```kotlin
-UriUtils.decode(u, StandardCharsets.UTF_8))
+UriUtils.decode(u, StandardCharsets.UTF_8)
 ```
 
 would return:
