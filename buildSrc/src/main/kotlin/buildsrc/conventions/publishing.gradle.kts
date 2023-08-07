@@ -52,6 +52,11 @@ publishing {
                         email.set("erik@thauvin.net")
                         url.set("https://erik.thauvin.net/")
                     }
+                    developer {
+                        id.set("aSemy")
+                        name.set("Adam")
+                        url.set("https://github.com/aSemy")
+                    }
                 }
                 scm {
                     connection.set("scm:git://github.com/$gitHub.git")
