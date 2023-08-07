@@ -3,7 +3,10 @@ package buildsrc.conventions.lang
 import buildsrc.utils.Rife2TestListener
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 
 
 /**
@@ -22,7 +25,7 @@ plugins {
 
 
 kotlin {
-    jvmToolchain(11)
+    //jvmToolchain(11)
 
     targets.configureEach {
         compilations.configureEach {
@@ -49,11 +52,22 @@ kotlin {
     }
 }
 
-tasks.withType<Test>().configureEach {
-    val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
-    addTestListener(Rife2TestListener(testsBadgeApiKey))
-    testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+ tasks {
+    withType<JavaCompile>().configureEach {
+        sourceCompatibility = JavaVersion.VERSION_11.toString()
+        targetCompatibility = JavaVersion.VERSION_11.toString()
     }
-}
+
+    withType<KotlinJvmCompile>().configureEach {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+    }
+
+    withType<Test>().configureEach {
+        val testsBadgeApiKey = providers.gradleProperty("testsBadgeApiKey")
+        addTestListener(Rife2TestListener(testsBadgeApiKey))
+        testLogging {
+            exceptionFormat = TestExceptionFormat.FULL
+            events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        }
+    }
+ }
