@@ -1,10 +1,10 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-org.freemarker:freemarker:2.3.30=koverJvmReporter
-org.jetbrains.intellij.deps:coverage-report:1.0.19=koverJvmReporter
-org.jetbrains.intellij.deps:intellij-coverage-agent:1.0.721=koverJvmAgent,koverJvmReporter
-org.jetbrains.intellij.deps:intellij-coverage-reporter:1.0.721=koverJvmReporter
+org.freemarker:freemarker:2.3.32=koverJvmReporter
+org.jetbrains.intellij.deps:coverage-report:1.0.21=koverJvmReporter
+org.jetbrains.intellij.deps:intellij-coverage-agent:1.0.724=koverJvmAgent,koverJvmReporter
+org.jetbrains.intellij.deps:intellij-coverage-reporter:1.0.724=koverJvmReporter
 org.jetbrains.intellij.deps:trove4j:1.0.20200330=kotlinKlibCommonizerClasspath
 org.jetbrains.kotlin:kotlin-compiler-embeddable:1.9.0=kotlinKlibCommonizerClasspath
 org.jetbrains.kotlin:kotlin-daemon-embeddable:1.9.0=kotlinKlibCommonizerClasspath
