@@ -16,21 +16,3 @@ tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
-
-dependencyLocking {
-    lockMode.set(LockMode.STRICT)
-    lockAllConfigurations()
-}
-
-tasks.register("resolveAndLockAllDependencies") {
-    // https://docs.gradle.org/current/userguide/dependency_locking.html#ex-resolving-all-configurations
-    group = "dependencies"
-    notCompatibleWithConfigurationCache("Filters configurations at execution time")
-    val resolvableConfigurations = configurations.matching { it.isCanBeResolved }
-    doFirst {
-        require(gradle.startParameter.isWriteDependencyLocks) { "$path must be run from the command line with the `--write-locks` flag" }
-    }
-    doLast {
-        resolvableConfigurations.forEach { it.resolve() }
-    }
-}
