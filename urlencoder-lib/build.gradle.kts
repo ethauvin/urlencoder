@@ -52,6 +52,20 @@ tasks {
         delete(deployDir)
     }
 
+    dokkaJavadoc {
+        dokkaSourceSets {
+            configureEach {
+                suppress.set(true)
+            }
+
+            val commonMain by getting {
+                suppress.set(false)
+                platform.set(org.jetbrains.dokka.Platform.jvm)
+            }
+        }
+
+    }
+
     withType<DokkaTask>().configureEach {
         dokkaSourceSets.configureEach {
             moduleName.set("UrlEncoder Library")
