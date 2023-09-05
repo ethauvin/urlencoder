@@ -1,12 +1,11 @@
 /*
- * Copyright 2001-2023 Geert Bevin (gbevin[remove] at uwyn dot com)
- * Copyright 2022-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2001-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,32 +26,26 @@ class UrlEncoderUtilTest {
     private val same = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_."
 
     companion object {
-        @JvmStatic
-        var invalid = arrayOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
+        val invalid = listOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
 
-        @JvmStatic
-        var validMap = arrayOf(
-            Pair("a test &", "a%20test%20%26"),
-            Pair(
-                "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=",
-                "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D"
-            ),
-            Pair("%#okékÉȢ smile!😁", "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81"),
-            Pair(
-                "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00", "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80"
-            )
+        val validMap = listOf(
+            "a test &" to "a%20test%20%26",
+            "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=" to
+              "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D",
+            "%#okékÉȢ smile!😁" to "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81",
+            "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00" to "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80",
         )
     }
 
     @Test
-    fun `Decode URL`() {
+    fun decodeURL() {
         for (m in validMap) {
             assertEquals(m.first, decode(m.second))
         }
     }
 
     @Test
-    fun `Decode with Exception`() {
+    fun decodeWithException() {
         for (source in invalid) {
             assertFailsWith<IllegalArgumentException>(
                 message = "decode($source)",
@@ -62,14 +55,14 @@ class UrlEncoderUtilTest {
     }
 
     @Test
-    fun `Decode when None needed`() {
+    fun decodeWhenNoneNeeded() {
         assertSame(same, decode(same))
         assertEquals("decode('')", decode(""), "")
         assertEquals("decode(' ')", decode(" "), " ")
     }
 
     @Test
-    fun `Decode with Plus to Space`() {
+    fun decodeWithPlusToSpace() {
         assertEquals("foo bar", decode("foo+bar", true))
         assertEquals("foo bar  foo", decode("foo+bar++foo", true))
         assertEquals("foo  bar  foo", decode("foo+%20bar%20+foo", true))
@@ -78,34 +71,34 @@ class UrlEncoderUtilTest {
     }
 
     @Test
-    fun `Encode URL`() {
+    fun encodeURL() {
         for (m in validMap) {
             assertEquals(m.second, encode(m.first))
         }
     }
 
     @Test
-    fun `Encode Empty or Blank`() {
+    fun encodeEmptyOrBlank() {
         assertTrue(encode("", allow = "").isEmpty(), "encode('','')")
         assertEquals("encode('')", encode(""), "")
         assertEquals("encode(' ')", encode(" "), "%20")
     }
 
     @Test
-    fun `Encode when None needed`() {
+    fun encodeWhenNoneNeeded() {
         assertSame(encode(same), same)
         assertSame("with empty allow", encode(same, allow = ""), same)
     }
 
     @Test
-    fun `Encode with Allow`() {
-        assertEquals("encode(x, =?)","?test=a%20test", encode("?test=a test", allow = "=?"))
+    fun encodeWithAllow() {
+        assertEquals("encode(x, =?)", "?test=a%20test", encode("?test=a test", allow = "=?"))
         assertEquals("encode(aaa, a)", "aaa", encode("aaa", "a"))
-        assertEquals("encode(' ')", " ", encode(" ", " ") )
+        assertEquals("encode(' ')", " ", encode(" ", " "))
     }
 
     @Test
-    fun `Encode with Space to Plus`() {
+    fun encodeWithSpaceToPlus() {
         assertEquals("foo+bar", encode("foo bar", spaceToPlus = true))
         assertEquals("foo+bar++foo", encode("foo bar  foo", spaceToPlus = true))
         assertEquals("foo bar", encode("foo bar", " ", true))
