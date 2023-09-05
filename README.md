@@ -62,7 +62,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.thauvin.erik:urlencoder-lib:1.3.0")
+    implementation("net.thauvin.erik:urlencoder-lib-jvm:1.4.0")
 }
 ```
 
@@ -73,7 +73,7 @@ to the artifact URL.
 <dependency>
     <groupId>net.thauvin.erik</groupId>
     <artifactId>urlencoder-lib-jvm</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
