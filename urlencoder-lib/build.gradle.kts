@@ -31,10 +31,8 @@ val deployDir = project.layout.projectDirectory.dir("deploy")
 
 kotlin {
     sourceSets {
-        jvmTest {
+        commonTest {
             dependencies {
-                //implementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-                //implementation("org.junit.jupiter:junit-jupiter:5.9.1")
                 implementation(kotlin("test"))
             }
         }
