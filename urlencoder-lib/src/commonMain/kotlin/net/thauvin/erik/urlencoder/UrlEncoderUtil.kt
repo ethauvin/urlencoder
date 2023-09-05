@@ -17,8 +17,8 @@
 
 package net.thauvin.erik.urlencoder
 
-import java.nio.charset.StandardCharsets
-import java.util.BitSet
+import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 
 /**
  * Most defensive approach to URL encoding and decoding.
@@ -39,20 +39,27 @@ import java.util.BitSet
 object UrlEncoderUtil {
     private val hexDigits = "0123456789ABCDEF".toCharArray()
 
-    // see https://www.rfc-editor.org/rfc/rfc3986#page-13
-    // and https://url.spec.whatwg.org/#application-x-www-form-urlencoded-percent-encode-set
-    private val unreservedChars = BitSet('z'.code + 1).apply {
-        set('-'.code)
-        set('.'.code)
-        for (c in '0'.code..'9'.code) {
-            set(c)
+    /**
+     * A [BooleanArray] with entries for the [character codes][Char.code] of
+     *
+     * * `0-9`,
+     * * `A-Z`,
+     * * `a-z`
+     *
+     * set to `true`.
+     */
+    private val unreservedChars = BooleanArray('z'.code + 1).apply {
+        set('-'.code, true)
+        set('.'.code, true)
+        set('_'.code, true)
+        for (c in '0'..'9') {
+            set(c.code, true)
         }
-        for (c in 'A'.code..'Z'.code) {
-            set(c)
+        for (c in 'A'..'Z') {
+            set(c.code, true)
         }
-        set('_'.code)
-        for (c in 'a'.code..'z'.code) {
-            set(c)
+        for (c in 'a'..'z') {
+            set(c.code, true)
         }
     }
 
@@ -84,14 +91,13 @@ object UrlEncoderUtil {
         }
 
         val length = source.length
-        val out: StringBuilder by lazy { StringBuilder(length) }
-        var ch: Char
+        val out = StringBuilder(length)
         var bytesBuffer: ByteArray? = null
         var bytesPos = 0
         var i = 0
         var started = false
         while (i < length) {
-            ch = source[i]
+            val ch = source[i]
             if (ch == '%') {
                 if (!started) {
                     out.append(source, 0, i)
@@ -103,7 +109,7 @@ object UrlEncoderUtil {
                     bytesBuffer = ByteArray((length - i) / 3)
                 }
                 i++
-                require(length >= i + 2) { "Illegal escape sequence" }
+                require(length >= i + 2) { "Incomplete trailing escape ($ch) pattern" }
                 try {
                     val v = source.substring(i, i + 2).toInt(16)
                     require(v in 0..0xFF) { "Illegal escape value" }
@@ -114,7 +120,7 @@ object UrlEncoderUtil {
                 }
             } else {
                 if (bytesBuffer != null) {
-                    out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+                    out.append(bytesBuffer.decodeToString(0, bytesPos))
                     started = true
                     bytesBuffer = null
                     bytesPos = 0
@@ -133,15 +139,15 @@ object UrlEncoderUtil {
         }
 
         if (bytesBuffer != null) {
-            out.append(String(bytesBuffer, 0, bytesPos, StandardCharsets.UTF_8))
+            out.append(bytesBuffer.decodeToString(0, bytesPos))
         }
 
         return if (!started) source else out.toString()
     }
 
     /**
-     * Transforms a provided [String] object into a new string, containing only valid URL characters in the UTF-8
-     * encoding.
+     * Transforms a provided [String] object into a new string, containing only valid URL
+     * characters in the UTF-8 encoding.
      *
      * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
      */
@@ -152,11 +158,10 @@ object UrlEncoderUtil {
             return source
         }
         var out: StringBuilder? = null
-        var ch: Char
         var i = 0
         while (i < source.length) {
-            ch = source[i]
-            if (ch.isUnreserved() || allow.indexOf(ch) != -1) {
+            val ch = source[i]
+            if (ch.isUnreserved() || ch in allow) {
                 out?.append(ch)
                 i++
             } else {
@@ -174,16 +179,18 @@ object UrlEncoderUtil {
                         }
                         i++
                     }
+
                     Character.isBmpCodePoint(cp) -> {
-                        for (b in ch.toString().toByteArray(StandardCharsets.UTF_8)) {
+                        for (b in ch.toString().encodeToByteArray()) {
                             out.appendEncodedByte(b.toInt())
                         }
                         i++
                     }
+
                     Character.isSupplementaryCodePoint(cp) -> {
-                        val high = Character.highSurrogate(cp)
-                        val low = Character.lowSurrogate(cp)
-                        for (b in charArrayOf(high, low).concatToString().toByteArray(StandardCharsets.UTF_8)) {
+                        val high = Character.highSurrogateOf(cp)
+                        val low = Character.lowSurrogateOf(cp)
+                        for (b in charArrayOf(high, low).concatToString().encodeToByteArray()) {
                             out.appendEncodedByte(b.toInt())
                         }
                         i += 2
@@ -193,5 +200,49 @@ object UrlEncoderUtil {
         }
 
         return out?.toString() ?: source
+    }
+
+    /**
+     * Returns the Unicode code point at the specified index.
+     *
+     * The `index` parameter is the regular `CharSequence` index, i.e. the number of `Char`s from the start of the character
+     * sequence.
+     *
+     * If the code point at the specified index is part of the Basic Multilingual Plane (BMP), its value can be represented
+     * using a single `Char` and this method will behave exactly like [CharSequence.get].
+     * Code points outside the BMP are encoded using a surrogate pair – a `Char` containing a value in the high surrogate
+     * range followed by a `Char` containing a value in the low surrogate range. Together these two `Char`s encode a single
+     * code point in one of the supplementary planes. This method will do the necessary decoding and return the value of
+     * that single code point.
+     *
+     * In situations where surrogate characters are encountered that don't form a valid surrogate pair starting at `index`,
+     * this method will return the surrogate code point itself, behaving like [CharSequence.get].
+     *
+     * If the `index` is out of bounds of this character sequence, this method throws an [IndexOutOfBoundsException].
+     *
+     * ```kotlin
+     * // Text containing code points outside the BMP (encoded as a surrogate pairs)
+     * val text = "\uD83E\uDD95\uD83E\uDD96"
+     *
+     * var index = 0
+     * while (index < text.length) {
+     *     val codePoint = text.codePointAt(index)
+     *     // (Do something with codePoint...)
+     *     index += CodePoints.charCount(codePoint)
+     * }
+     * ```
+     */
+    private fun CharSequence.codePointAt(index: Int): Int {
+        if (index !in indices) throw IndexOutOfBoundsException("index $index was not in range $indices")
+
+        val firstChar = this[index]
+        if (firstChar.isHighSurrogate()) {
+            val nextChar = getOrNull(index + 1)
+            if (nextChar?.isLowSurrogate() == true) {
+                return Character.toCodePoint(firstChar, nextChar)
+            }
+        }
+
+        return firstChar.code
     }
 }
