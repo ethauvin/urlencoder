@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2001-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package net.thauvin.erik.urlencoder
 
 import kotlin.Char.Companion.MIN_HIGH_SURROGATE
@@ -23,6 +24,7 @@ import kotlin.Char.Companion.MIN_LOW_SURROGATE
  *
  * @author <a href="https://github.com/aSemy">aSemy</a>
  */
+
 internal object Character {
 
     /**
