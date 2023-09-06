@@ -30,7 +30,7 @@ publishing {
     publications {
         withType<MavenPublication>().configureEach {
             pom {
-                name.set("UrlEncoder for Kotlin")
+                name.set("UrlEncoder for Kotlin Multiplatform")
                 description.set(project.description)
                 url.set(mavenUrl)
                 licenses {
