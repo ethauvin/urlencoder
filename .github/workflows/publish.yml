@@ -6,8 +6,8 @@ on:
 env:
   JAVA_VERSION: 11
   JAVA_DISTRIBUTION: 'zulu'
-  ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSH_USERNAME}}
-  ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSH_PASSWORD}}
+  ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME}}
+  ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD}}
 
 jobs:
   publish-base:
@@ -112,5 +112,5 @@ jobs:
         run: ./gradlew publishMingwX64PublicationToOSSRHRepository
 
       - name: Delete GnuPG data
-        run: rm -rfv $HOME/.gnupg
+        run: rd /s /q $HOME/.gnupg
   

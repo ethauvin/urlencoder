@@ -62,7 +62,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.thauvin.erik:urlencoder-lib-jvm:1.4.0")
+    implementation("net.thauvin.erik:urlencoder-lib:1.4.0")
 }
 ```
 
