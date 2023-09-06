@@ -112,5 +112,6 @@ jobs:
         run: ./gradlew publishMingwX64PublicationToOSSRHRepository
 
       - name: Delete GnuPG data
-        run: rd /s /q $HOME/.gnupg
-  
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: $HOME/.gnupg 
