@@ -1,0 +1,116 @@
+name: publish
+
+on:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: 11
+  JAVA_DISTRIBUTION: 'zulu'
+  ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSH_USERNAME}}
+  ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSH_PASSWORD}}
+
+jobs:
+  publish-base:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Import key
+        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
+
+      - name: Publish Multiplatform release
+        run: ./gradlew publishKotlinMultiplatformPublicationToOSSRHRepository
+
+      - name: Publish JVM release
+        run: ./gradlew publishJvmPublicationToOSSRHRepository
+
+      - name: Publish JS release
+        run: ./gradlew publishJsPublicationToOSSRHRepository
+
+      - name: Delete GnuPG data
+        run: rm -rfv $HOME/.gnupg
+
+  publish-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Import key
+        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
+
+      - name: Publish Linux x64 release
+        run: ./gradlew publishLinuxX64PublicationToOSSRHRepository
+
+      - name: Delete GnuPG data
+        run: rm -rfv $HOME/.gnupg
+
+  publish-mac:
+    runs-on: macos-latest
+    strategy:
+      max-parallel: 6
+      matrix:
+        target:
+          - publishMacosArm64PublicationToOSSRHRepository
+          - publishMacosX64PublicationToOSSRHRepository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Import key
+        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
+
+      - name: Publish
+        run: ./gradlew ${{ matrix.target }}
+
+      - name: Delete GnuPG data
+        run: rm -rfv $HOME/.gnupg
+
+  publish-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Import key
+        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
+
+      - name: Publish MinGW x64 release
+        run: ./gradlew publishMingwX64PublicationToOSSRHRepository
+
+      - name: Delete GnuPG data
+        run: rm -rfv $HOME/.gnupg
+  
