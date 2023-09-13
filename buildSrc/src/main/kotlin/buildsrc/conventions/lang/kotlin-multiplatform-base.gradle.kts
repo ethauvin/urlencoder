@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
  * This plugin does not enable any Kotlin target. To enable a target in a subproject, prefer applying specific Kotlin
  * target convention plugins.
  */
-
 plugins {
     id("buildsrc.conventions.base")
     kotlin("multiplatform")
@@ -22,14 +21,13 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-
 kotlin {
     //jvmToolchain(11)
 
     targets.configureEach {
         compilations.configureEach {
             kotlinOptions {
-                languageVersion = "1.5"
+                languageVersion = "1.6"
             }
         }
     }
