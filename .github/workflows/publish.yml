@@ -114,4 +114,4 @@ jobs:
       - name: Delete GnuPG data
         uses: JesseTG/rm@v1.0.3
         with:
-          path: $HOME/.gnupg 
+          path: ~/.gnupg
