@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 
-
 /**
  * Base configuration for all Kotlin/Multiplatform conventions.
  *
@@ -30,7 +29,7 @@ kotlin {
     targets.configureEach {
         compilations.configureEach {
             kotlinOptions {
-                // nothin' yet
+                languageVersion = "1.5"
             }
         }
     }
@@ -52,7 +51,7 @@ kotlin {
     }
 }
 
- tasks {
+tasks {
     withType<JavaCompile>().configureEach {
         sourceCompatibility = JavaVersion.VERSION_11.toString()
         targetCompatibility = JavaVersion.VERSION_11.toString()
@@ -70,4 +69,4 @@ kotlin {
             events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
         }
     }
- }
+}
