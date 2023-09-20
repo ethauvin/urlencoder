@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.thauvin.erik.urlencoder"
-version = "1.4.0-SNAPSHOT"
+version = "1.4.0"
 
 dependencies {
     kover(projects.urlencoderLib)

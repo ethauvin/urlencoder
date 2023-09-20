@@ -2,15 +2,15 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9.0-blue)](https://kotlinlang.org/)
 [![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik.urlencoder/urlencoder-lib?label=snapshot&server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
 [![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik/urlencoder)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik.urlencoder/urlencoder-lib/badge.svg?color=blue)](https://search.maven.org/search?q=g:net.thauvin.erik.urlencoder)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ethauvin_urlencoder&metric=alert_status)](https://sonarcloud.io/dashboard?id=ethauvin_urlencoder)
 [![GitHub CI](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml/badge.svg)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 [![Tests](https://rife2.com/tests-badge/badge/net.thauvin.erik/urlencoder)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 
-# URL Encoder for Kotlin
+# URL Encoder for Kotlin Multiplatform
 
-UrlEncoder is a simple defensive Kotlin Multiplatform library to encode/decode URL components.
+UrlEncoder is a simple defensive library to encode/decode URL components.
 
 This library was adapted from the [RIFE2 Web Application Framework](https://rife2.com).  
 A pure Java version can also be found at [https://github.com/gbevin/urlencoder](https://github.com/gbevin/urlencoder).
@@ -77,8 +77,8 @@ to the artifact URL.
 </dependency>
 ```
 
-Instructions for using with Maven, Ivy, etc. can be found on 
-[Maven Central](https://search.maven.org/artifact/net.thauvin.erik/urlencoder).
+Instructions for using with Ivy, etc. can be found on 
+[Maven Central](https://search.maven.org/search?q=g:net.thauvin.erik.urlencoder).
 
 ## Standalone usage
 
