@@ -8,6 +8,8 @@ env:
   JAVA_DISTRIBUTION: 'zulu'
   ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME}}
   ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD}}
+  ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_SECRET_KEY }}
+  ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGN_SECRET_PWD }}
 
 jobs:
   publish-base:
@@ -23,11 +25,6 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       - uses: gradle/gradle-build-action@v2
-
-      - name: Import key
-        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
-        env: 
-          GPG_TTY: ${{ env.tty }}
 
       - name: Publish Multiplatform release
         run: ./gradlew publishKotlinMultiplatformPublicationToOSSRHRepository
@@ -55,16 +52,8 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
 
-      - name: Import key
-        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
-        env: 
-          GPG_TTY: ${{ env.tty }}
-
       - name: Publish Linux x64 release
         run: ./gradlew publishLinuxX64PublicationToOSSRHRepository
-
-      - name: Delete GnuPG data
-        run: rm -rfv $HOME/.gnupg
 
   publish-mac:
     runs-on: macos-latest
@@ -86,16 +75,8 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
 
-      - name: Import key
-        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
-        env: 
-          GPG_TTY: ${{ env.tty }}
-
       - name: Publish
         run: ./gradlew ${{ matrix.target }}
-
-      - name: Delete GnuPG data
-        run: rm -rfv $HOME/.gnupg
 
   publish-windows:
     runs-on: windows-latest
@@ -111,13 +92,5 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
 
-      - name: Import key
-        run: echo "${{ secrets.SIGN_SECRET_KEY }}" | gpg --batch --import
-
       - name: Publish MinGW x64 release
         run: ./gradlew publishMingwX64PublicationToOSSRHRepository
-
-      - name: Delete GnuPG data
-        uses: JesseTG/rm@v1.0.3
-        with:
-          path: ~/.gnupg
