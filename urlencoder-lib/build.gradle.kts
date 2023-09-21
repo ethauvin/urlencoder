@@ -8,8 +8,6 @@ plugins {
     id("com.github.ben-manes.versions")
 }
 
-val deployDir = project.layout.projectDirectory.dir("deploy")
-
 kotlin {
     sourceSets {
         commonTest {
@@ -26,11 +24,6 @@ base {
 }
 
 tasks {
-
-    clean {
-        delete(deployDir)
-    }
-
     dokkaJavadoc {
         dokkaSourceSets {
             configureEach {
@@ -49,20 +42,5 @@ tasks {
         dokkaSourceSets.configureEach {
             moduleName.set("UrlEncoder Library")
         }
-    }
-
-    val copyToDeploy by registering(Sync::class) {
-        group = PublishingPlugin.PUBLISH_TASK_GROUP
-        from(configurations.runtimeClasspath) {
-            exclude("annotations-*.jar")
-        }
-        from(jvmJar)
-        into(deployDir)
-    }
-
-    register("deploy") {
-        description = "Copies all needed files to the 'deploy' directory."
-        group = PublishingPlugin.PUBLISH_TASK_GROUP
-        dependsOn(build, copyToDeploy)
     }
 }

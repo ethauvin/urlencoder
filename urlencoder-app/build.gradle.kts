@@ -9,7 +9,6 @@ plugins {
     id("com.github.ben-manes.versions")
 }
 
-val deployDir = project.layout.projectDirectory.dir("deploy")
 val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 kotlin {
@@ -61,28 +60,9 @@ tasks {
         dependsOn(fatJar)
     }
 
-    clean {
-        delete(deployDir)
-    }
-
     withType<DokkaTask>().configureEach {
         dokkaSourceSets.configureEach {
             moduleName.set("UrlEncoder Application")
         }
-    }
-
-    val copyToDeploy by registering(Sync::class) {
-        group = PublishingPlugin.PUBLISH_TASK_GROUP
-        from(configurations.jvmRuntimeClasspath) {
-            exclude("annotations-*.jar")
-        }
-        from(jvmJar)
-        into(deployDir)
-    }
-
-    register("deploy") {
-        description = "Copies all needed files to the 'deploy' directory."
-        group = PublishingPlugin.PUBLISH_TASK_GROUP
-        dependsOn(build, copyToDeploy)
     }
 }
