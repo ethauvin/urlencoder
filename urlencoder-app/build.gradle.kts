@@ -9,8 +9,6 @@ plugins {
     id("com.github.ben-manes.versions")
 }
 
-description = "A simple defensive application to encode/decode URL components"
-
 val deployDir = project.layout.projectDirectory.dir("deploy")
 val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 

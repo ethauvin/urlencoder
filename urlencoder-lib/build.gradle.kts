@@ -8,8 +8,6 @@ plugins {
     id("com.github.ben-manes.versions")
 }
 
-description = "A simple defensive library to encode/decode URL components"
-
 val deployDir = project.layout.projectDirectory.dir("deploy")
 
 kotlin {

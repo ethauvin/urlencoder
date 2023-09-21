@@ -31,7 +31,7 @@ publishing {
         withType<MavenPublication>().configureEach {
             pom {
                 name.set("UrlEncoder for Kotlin Multiplatform")
-                description.set(project.description)
+                description.set("A simple defensive library to encode/decode URL components")
                 url.set(mavenUrl)
                 licenses {
                     license {
