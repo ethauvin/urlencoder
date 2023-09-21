@@ -4,7 +4,6 @@
 [![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik.urlencoder/urlencoder-lib/badge.svg?color=blue)](https://search.maven.org/search?q=g:net.thauvin.erik.urlencoder)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ethauvin_urlencoder&metric=alert_status)](https://sonarcloud.io/dashboard?id=ethauvin_urlencoder)
 [![GitHub CI](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml/badge.svg)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 [![Tests](https://rife2.com/tests-badge/badge/net.thauvin.erik/urlencoder)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 
