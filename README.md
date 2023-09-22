@@ -36,14 +36,14 @@ compared to other solutions like the standard `URLEncoder` in the JDK or
 ## Examples (TL;DR)
 
 ```kotlin
-UrlEncoder.encode("a test &") // -> a%20test%20%26
-UrlEncoder.encode("%#okékÉȢ smile!😁") // -> %25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81
-UrlEncoder.encode("?test=a test", allow = "?=") // -> ?test=a%20test
-UrlEncoder.endode("foo bar", spaceToPlus = true) // -> foo+bar
+UrlEncoderUtil.encode("a test &") // -> a%20test%20%26
+UrlEncoderUtil.encode("%#okékÉȢ smile!😁") // -> %25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81
+UrlEncoderUtil.encode("?test=a test", allow = "?=") // -> ?test=a%20test
+UrlEncoderUtil.endode("foo bar", spaceToPlus = true) // -> foo+bar
 
-UrlEncoder.decode("a%20test%20%26") // -> a test &
-UrlEncoder.decode("%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81") // -> %#okékÉȢ smile!😁
-UrlEncoder.decode("foo+bar", plusToSpace = true) // -> foo bar
+UrlEncoderUtil.decode("a%20test%20%26") // -> a test &
+UrlEncoderUtil.decode("%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81") // -> %#okékÉȢ smile!😁
+UrlEncoderUtil.decode("foo+bar", plusToSpace = true) // -> foo bar
 ```
 
 ## Gradle, Maven, etc.
