@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue)](https://kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.6%2B-blue)](https://kotlinlang.org/)
 [![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik.urlencoder/urlencoder-lib?label=snapshot&server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
 [![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/net.thauvin.erik.urlencoder/urlencoder-lib)](https://central.sonatype.com/search?namespace=net.thauvin.erik.urlencoder)
