@@ -2,7 +2,7 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9.0-blue)](https://kotlinlang.org/)
 [![Nexus Snapshot](https://img.shields.io/nexus/s/net.thauvin.erik.urlencoder/urlencoder-lib?label=snapshot&server=https%3A%2F%2Foss.sonatype.org%2F)](https://oss.sonatype.org/content/repositories/snapshots/net/thauvin/erik/urlencoder/)
 [![Release](https://img.shields.io/github/release/ethauvin/urlencoder.svg)](https://github.com/ethauvin/urlencoder/releases/latest)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.thauvin.erik.urlencoder/urlencoder-lib/badge.svg?color=blue)](https://search.maven.org/search?q=g:net.thauvin.erik.urlencoder)
+[![Maven Central](https://img.shields.io/maven-central/v/net.thauvin.erik.urlencoder/urlencoder-lib)](https://central.sonatype.com/search?namespace=net.thauvin.erik.urlencoder)
 
 [![GitHub CI](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml/badge.svg)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
 [![Tests](https://rife2.com/tests-badge/badge/net.thauvin.erik/urlencoder)](https://github.com/ethauvin/urlencoder/actions/workflows/gradle.yml)
@@ -77,7 +77,7 @@ to the artifact URL.
 ```
 
 Instructions for using with Ivy, etc. can be found on 
-[Maven Central](https://search.maven.org/search?q=g:net.thauvin.erik.urlencoder).
+[Maven Central](https://central.sonatype.com/search?namespace=net.thauvin.erik.urlencoder).
 
 ## Standalone usage
 
