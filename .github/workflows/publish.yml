@@ -60,6 +60,8 @@ jobs:
         target:
           - publishMacosArm64PublicationToOSSRHRepository
           - publishMacosX64PublicationToOSSRHRepository
+          - publishIosArm64PublicationToOSSRHRepository
+          - publishIosX64PublicationToOSSRHRepository
     steps:
       - name: Checkout
         uses: actions/checkout@v3
