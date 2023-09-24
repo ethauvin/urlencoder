@@ -1,0 +1,36 @@
+name: publish
+
+on:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: 11
+  JAVA_DISTRIBUTION: 'zulu'
+  ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME}}
+  ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD}}
+  ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_SECRET_KEY }}
+  ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGN_SECRET_PWD }}
+
+jobs:
+  publish-ios:
+    runs-on: macos-latest
+    strategy:
+      max-parallel: 6
+      matrix:
+        target:
+          - publishIosArm64PublicationToOSSRHRepository
+          - publishIosX64PublicationToOSSRHRepository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Publish
+        run: ./gradlew ${{ matrix.target }}
