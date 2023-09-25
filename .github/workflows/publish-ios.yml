@@ -20,6 +20,8 @@ jobs:
         target:
           - publishIosArm64PublicationToOSSRHRepository
           - publishIosX64PublicationToOSSRHRepository
+          - publishIosSimulatorArm64PublicationToOSSRHRepository
+          - publishIosSimulatorX64PublicationToOSSRHRepository
     steps:
       - name: Checkout
         uses: actions/checkout@v3
