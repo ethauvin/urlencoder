@@ -78,7 +78,7 @@ kotlin {
         val iosTest by getting { dependsOn(nativeTest) }
 
         val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
-        val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
+        // val iosSimulatorArm64Test by getting { dependsOn(iosTest) }
 
         // // Apple - tvOS
         // val tvosMain by getting { dependsOn(nativeMain) }
