@@ -26,6 +26,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
+      CODECOV_JDK: "17"
 
     steps:
       - uses: actions/checkout@v3
@@ -52,3 +53,9 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
           arguments: build check --stacktrace -PtestsBadgeApiKey=${{ secrets.TESTS_BADGE_API_KEY }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        if: success() && matrix.java-version == env.CODECOV_JDK
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
