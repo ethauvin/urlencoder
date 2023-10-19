@@ -98,9 +98,15 @@ signing {
     })
 }
 
-tasks.withType<Sign>().configureEach {
-    val signingRequiredPredicate = provider { signing.isRequired }
-    onlyIf { signingRequiredPredicate.get() }
+tasks {
+    withType<Sign>().configureEach {
+        val signingRequiredPredicate = provider { signing.isRequired }
+        onlyIf { signingRequiredPredicate.get() }
+    }
+
+    withType<GenerateMavenPom> {
+        destination = file("$projectDir/pom.xml")
+    }
 }
 
 // https://youtrack.jetbrains.com/issue/KT-46466
