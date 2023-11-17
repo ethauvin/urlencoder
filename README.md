@@ -124,7 +124,7 @@ java -jar urlencoder-app/build/libs/urlencoder-*all.jar -d "a%20test%20%26" # ->
 
 ## Why not simply use `java.net.URLEncoder`?
 
-Apart for being quite inefficient and [deprecated](https://inside.java/2023/02/15/quality-heads-up/) as of JDK 20, some URL components encoded with `URLEncoder.encode` might not be able to be properly decoded.
+Apart for being quite inefficient, some URL components encoded with `URLEncoder.encode` might not be able to be properly decoded.
 
 For example, a simple search query such as:
 
