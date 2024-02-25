@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2023 the original author or authors.
+ * Copyright 2001-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class UrlEncoderTest {
         val validMap = listOf(
             "a test &" to "a%20test%20%26",
             "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=" to
-              "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D",
+                    "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D",
             "%#okékÉȢ smile!😁" to "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81",
             "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00" to "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80",
         )

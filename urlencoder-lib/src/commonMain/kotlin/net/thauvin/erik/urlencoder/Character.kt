@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2023 the original author or authors.
+ * Copyright 2001-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,15 +59,15 @@ internal object Character {
     internal fun lowSurrogateOf(codePoint: Int): Char =
         ((codePoint and 0x3FF) + MIN_LOW_SURROGATE.code).toChar()
 
-//    private const val MIN_CODE_POINT: Int = 0x000000
+    //    private const val MIN_CODE_POINT: Int = 0x000000
     private const val MAX_CODE_POINT: Int = 0x10FFFF
 
     private const val MIN_SUPPLEMENTARY_CODE_POINT: Int = 0x10000
 
     private const val SURROGATE_DECODE_OFFSET: Int =
         MIN_SUPPLEMENTARY_CODE_POINT -
-          (MIN_HIGH_SURROGATE.code shl 10) -
-          MIN_LOW_SURROGATE.code
+                (MIN_HIGH_SURROGATE.code shl 10) -
+                MIN_LOW_SURROGATE.code
 
     private const val HIGH_SURROGATE_ENCODE_OFFSET: Char = MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT ushr 10)
 }

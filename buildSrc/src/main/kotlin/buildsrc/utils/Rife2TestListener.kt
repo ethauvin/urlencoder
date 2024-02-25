@@ -1,12 +1,11 @@
 /*
- * Copyright 2001-2023 Geert Bevin (gbevin[remove] at uwyn dot com)
- * Copyright 2022-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2001-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,10 +47,10 @@ class Rife2TestListener(
                             .uri(
                                 URI(
                                     "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
-                                        "apiKey=$apiKey&" +
-                                        "passed=$passed&" +
-                                        "failed=$failed&" +
-                                        "skipped=$skipped"
+                                            "apiKey=$apiKey&" +
+                                            "passed=$passed&" +
+                                            "failed=$failed&" +
+                                            "skipped=$skipped"
                                 )
                             )
                             .POST(HttpRequest.BodyPublishers.noBody())
