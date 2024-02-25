@@ -36,7 +36,7 @@ kotlin {
     targets.withType<KotlinJvmTarget>().configureEach {
         testRuns.configureEach {
             executionTask.configure {
-                // useJUnitPlatform()
+                 useJUnitPlatform()
             }
         }
     }
