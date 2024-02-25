@@ -23,30 +23,17 @@ import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.DefaultAsserter.assertSame
 
 class UrlEncoderUtilTest {
-    private val same = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_."
-
-    companion object {
-        val invalid = listOf("sdkjfh%", "sdkjfh%6", "sdkjfh%xx", "sdfjfh%-1")
-
-        val validMap = listOf(
-            "a test &" to "a%20test%20%26",
-            "!abcdefghijklmnopqrstuvwxyz%%ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.~=" to
-                    "%21abcdefghijklmnopqrstuvwxyz%25%25ABCDEFGHIJKLMNOPQRSTUVQXYZ0123456789-_.%7E%3D",
-            "%#okékÉȢ smile!😁" to "%25%23ok%C3%A9k%C3%89%C8%A2%20smile%21%F0%9F%98%81",
-            "\uD808\uDC00\uD809\uDD00\uD808\uDF00\uD808\uDD00" to "%F0%92%80%80%F0%92%94%80%F0%92%8C%80%F0%92%84%80",
-        )
-    }
 
     @Test
     fun decodeURL() {
-        for (m in validMap) {
-            assertEquals(m.first, decode(m.second))
+        for ((unencoded, encoded) in decodedToEncoded) {
+            assertEquals(unencoded, decode(encoded))
         }
     }
 
     @Test
     fun decodeWithException() {
-        for (source in invalid) {
+        for (source in invalidContent) {
             assertFailsWith<IllegalArgumentException>(
                 message = "decode($source)",
                 block = { decode(source) }
@@ -56,7 +43,7 @@ class UrlEncoderUtilTest {
 
     @Test
     fun decodeWhenNoneNeeded() {
-        assertSame(same, decode(same))
+        assertSame(standardContent, decode(standardContent))
         assertEquals("decode('')", decode(""), "")
         assertEquals("decode(' ')", decode(" "), " ")
     }
@@ -72,8 +59,8 @@ class UrlEncoderUtilTest {
 
     @Test
     fun encodeURL() {
-        for (m in validMap) {
-            assertEquals(m.second, encode(m.first))
+        for ((unencoded, encoded) in decodedToEncoded) {
+            assertEquals(encoded, encode(unencoded))
         }
     }
 
@@ -86,8 +73,8 @@ class UrlEncoderUtilTest {
 
     @Test
     fun encodeWhenNoneNeeded() {
-        assertSame(encode(same), same)
-        assertSame("with empty allow", encode(same, allow = ""), same)
+        assertSame(encode(standardContent), standardContent)
+        assertSame("with empty allow", encode(standardContent, allow = ""), standardContent)
     }
 
     @Test
