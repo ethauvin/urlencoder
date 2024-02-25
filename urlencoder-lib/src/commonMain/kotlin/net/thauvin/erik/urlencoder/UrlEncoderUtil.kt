@@ -82,7 +82,6 @@ object UrlEncoderUtil {
      * Transforms a provided [String] into a new string, containing decoded URL characters in the UTF-8
      * encoding.
      */
-    @JvmStatic
     @JvmOverloads
     fun decode(source: String, plusToSpace: Boolean = false): String {
         if (source.isEmpty()) {
@@ -150,7 +149,6 @@ object UrlEncoderUtil {
      *
      * - Letters, numbers, unreserved (`_-!.'()*`) and allowed characters are left intact.
      */
-    @JvmStatic
     @JvmOverloads
     fun encode(source: String, allow: String = "", spaceToPlus: Boolean = false): String {
         if (source.isEmpty()) {
