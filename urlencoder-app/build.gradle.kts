@@ -1,17 +1,21 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     buildsrc.conventions.lang.`kotlin-multiplatform-jvm`
-//    buildsrc.conventions.lang.`kotlin-multiplatform-js`
-//    buildsrc.conventions.lang.`kotlin-multiplatform-native`
     buildsrc.conventions.publishing
-    id("application")
     id("com.github.ben-manes.versions")
 }
 
 val urlEncoderMainClass = "net.thauvin.erik.urlencoder.UrlEncoder"
 
 kotlin {
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        mainRun {
+            mainClass.set(urlEncoderMainClass)
+        }
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -32,10 +36,6 @@ base {
     archivesName.set(rootProject.name)
 }
 
-application {
-    mainClass.set(urlEncoderMainClass)
-}
-
 tasks {
     jvmJar {
         manifest {
@@ -45,14 +45,13 @@ tasks {
 
     val fatJar by registering(Jar::class) {
         group = LifecycleBasePlugin.BUILD_GROUP
-        dependsOn.addAll(listOf("compileJava", "compileKotlinJvm", "processResources"))
         archiveClassifier.set("all")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
-        from(sourceSets.main.get().output)
+        manifest { attributes(mapOf("Main-Class" to urlEncoderMainClass)) }
+        from(sourceSets.main.map { it.output })
         dependsOn(configurations.jvmRuntimeClasspath)
         from(configurations.jvmRuntimeClasspath.map { classpath ->
-            classpath.incoming.artifacts.artifactFiles.files.filter { it.name.endsWith("jar") }.map { zipTree(it) }
+            classpath.filter { it.name.endsWith(".jar") }.map { zipTree(it) }
         })
     }
 
