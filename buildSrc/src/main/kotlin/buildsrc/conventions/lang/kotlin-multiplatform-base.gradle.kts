@@ -3,7 +3,9 @@ package buildsrc.conventions.lang
 import buildsrc.utils.Rife2TestListener
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -23,29 +25,20 @@ plugins {
 
 kotlin {
     //jvmToolchain(11)
+
     applyDefaultHierarchyTemplate()
 
-    targets.configureEach {
-        compilations.configureEach {
-            kotlinOptions {
-                languageVersion = "1.6"
-            }
-        }
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_1_6
     }
 
     // configure all Kotlin/JVM Tests to use JUnit
     targets.withType<KotlinJvmTarget>().configureEach {
         testRuns.configureEach {
             executionTask.configure {
-                 useJUnitPlatform()
+                useJUnitPlatform()
             }
-        }
-    }
-
-    sourceSets.configureEach {
-        languageSettings {
-            // languageVersion =
-            // apiVersion =
         }
     }
 }
