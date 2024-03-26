@@ -23,6 +23,7 @@ plugins {
 
 kotlin {
     //jvmToolchain(11)
+    applyDefaultHierarchyTemplate()
 
     targets.configureEach {
         compilations.configureEach {
