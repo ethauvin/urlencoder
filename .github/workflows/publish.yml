@@ -4,93 +4,37 @@ on:
   workflow_dispatch:
 
 env:
-  JAVA_VERSION: 11
-  JAVA_DISTRIBUTION: 'zulu'
   ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME}}
   ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD}}
   ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_SECRET_KEY }}
   ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGN_SECRET_PWD }}
 
 jobs:
-  publish-base:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-
-      - uses: gradle/gradle-build-action@v2
-
-      - name: Publish Multiplatform release
-        run: ./gradlew publishKotlinMultiplatformPublicationToOSSRHRepository
-
-      - name: Publish JVM release
-        run: ./gradlew publishJvmPublicationToOSSRHRepository
-
-      - name: Publish JS release
-        run: ./gradlew publishJsPublicationToOSSRHRepository
-
-  publish-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-
-      - uses: gradle/gradle-build-action@v2
-
-      - name: Publish Linux x64 release
-        run: ./gradlew publishLinuxX64PublicationToOSSRHRepository
-
-  publish-mac:
+  publish:
     runs-on: macos-latest
-    strategy:
-      max-parallel: 6
-      matrix:
-        target:
-          - publishMacosArm64PublicationToOSSRHRepository
-          - publishMacosX64PublicationToOSSRHRepository
-          - publishIosArm64PublicationToOSSRHRepository
-          - publishIosX64PublicationToOSSRHRepository
-          - publishIosSimulatorArm64PublicationToOSSRHRepository
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: "11"
+          distribution: "zulu"
+          cache: "gradle"
 
-      - uses: gradle/gradle-build-action@v2
+      - name: Cache Kotlin Konan
+        id: cache-kotlin-konan
+        uses: actions/cache@v3
+        with:
+          path: ~/.konan/**/*
+          key: kotlin-konan-${{ runner.os }}
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
 
       - name: Publish
-        run: ./gradlew ${{ matrix.target }}
-
-  publish-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-
-      - uses: gradle/gradle-build-action@v2
-
-      - name: Publish MinGW x64 release
-        run: ./gradlew publishMingwX64PublicationToOSSRHRepository
+        run: ./gradlew publish --no-parallel --stacktrace

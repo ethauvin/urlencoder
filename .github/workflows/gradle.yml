@@ -17,7 +17,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java-version: [ 11, 17, 20 ]
+        java-version: [11, 17, 21]
         os:
           - macos-latest
           - ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: ${{ matrix.java-version }}
 
       - name: Validate Gradle wrapper
@@ -43,8 +43,7 @@ jobs:
         id: cache-kotlin-konan
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.konan/**/*
+          path: ~/.konan/**/*
           key: kotlin-konan-${{ runner.os }}
 
       - name: Test with Gradle
