@@ -9,32 +9,36 @@ env:
   ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_SECRET_KEY }}
   ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGN_SECRET_PWD }}
 
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  # Don't cancel midway through publishing if another workflow is triggered, it might cause partial publications
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: macos-latest
-    env:
-      GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: "11"
           distribution: "zulu"
-          cache: "gradle"
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
 
       - name: Cache Kotlin Konan
-        id: cache-kotlin-konan
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.konan/**/*
           key: kotlin-konan-${{ runner.os }}
 
-      - name: Build
-        uses: gradle/gradle-build-action@v2
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Publish
         run: ./gradlew publish --no-parallel --stacktrace
