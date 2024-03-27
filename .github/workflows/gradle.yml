@@ -28,7 +28,7 @@ jobs:
       GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
@@ -37,17 +37,16 @@ jobs:
           java-version: ${{ matrix.java-version }}
 
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
 
       - name: Cache Kotlin Konan
-        id: cache-kotlin-konan
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.konan/**/*
           key: kotlin-konan-${{ runner.os }}
 
-      - name: Test with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-home-cache-cleanup: true
-          arguments: build check --stacktrace -PtestsBadgeApiKey=${{ secrets.TESTS_BADGE_API_KEY }}
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Publish
+        run: ./gradlew check build --stacktrace -PtestsBadgeApiKey=${{ secrets.TESTS_BADGE_API_KEY }}
