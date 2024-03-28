@@ -32,7 +32,6 @@ optimizations have a significantly beneficial impact on performance of encoding
 compared to other solutions like the standard `URLEncoder` in the JDK or
 `UriUtils` in Spring.
 
-
 ## Examples (TL;DR)
 
 ```kotlin
@@ -61,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.thauvin.erik.urlencoder:urlencoder-lib:1.4.0")
+    implementation("net.thauvin.erik.urlencoder:urlencoder-lib:1.5.0")
 }
 ```
 
@@ -72,11 +71,11 @@ to the artifact URL.
 <dependency>
     <groupId>net.thauvin.erik.urlencoder</groupId>
     <artifactId>urlencoder-lib-jvm</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
-Instructions for using with Ivy, etc. can be found on 
+Instructions for using with Ivy, etc. can be found on
 [Maven Central](https://central.sonatype.com/search?namespace=net.thauvin.erik.urlencoder).
 
 ## Standalone usage
@@ -90,7 +89,7 @@ You have two options:
 
 The usage is as follows:
 
-```
+```console
 Encode and decode URL components defensively.
   -e  encode (default)
   -d  decode
@@ -98,7 +97,7 @@ Encode and decode URL components defensively.
 
 ### Running with Gradle
 
-```shell
+```console
 ./gradlew run --quiet --args="-e 'a test &'"        # -> a%20test%20%26
 ./gradlew run --quiet --args="%#okékÉȢ"             # -> %25%23ok%C3%A9k%C3%89%C8%A2
 
@@ -109,13 +108,13 @@ Encode and decode URL components defensively.
 
 First build the jar file:
 
-```shell
+```console
 ./gradlew fatJar
 ```
 
 Then run it:
 
-```shell
+```console
 java -jar urlencoder-app/build/libs/urlencoder-*all.jar -e "a test &"       # -> a%20test%20%26
 java -jar urlencoder-app/build/libs/urlencoder-*all.jar "%#okékÉȢ"          # -> %25%23ok%C3%A9k%C3%89%C8%A2
 
