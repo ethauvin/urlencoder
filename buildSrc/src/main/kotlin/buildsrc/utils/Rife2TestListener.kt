@@ -16,14 +16,13 @@
 
 package buildsrc.utils
 
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.util.EntityUtils
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.testing.TestDescriptor
 import org.gradle.api.tasks.testing.TestListener
 import org.gradle.api.tasks.testing.TestResult
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 
 class Rife2TestListener(
     private val testBadgeApiKey: Provider<String>
@@ -41,23 +40,23 @@ class Rife2TestListener(
 
             if (apiKey != null) {
                 println(apiKey)
-                val response: HttpResponse<String> = HttpClient.newHttpClient()
-                    .send(
-                        HttpRequest.newBuilder()
-                            .uri(
-                                URI(
-                                    "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
-                                            "apiKey=$apiKey&" +
-                                            "passed=$passed&" +
-                                            "failed=$failed&" +
-                                            "skipped=$skipped"
-                                )
-                            )
-                            .POST(HttpRequest.BodyPublishers.noBody())
-                            .build(), HttpResponse.BodyHandlers.ofString()
-                    )
-                println("RESPONSE: ${response.statusCode()}")
-                println(response.body())
+                val url = "https://rife2.com/tests-badge/update/net.thauvin.erik/urlencoder?" +
+                        "apiKey=$apiKey&" +
+                        "passed=$passed&" +
+                        "failed=$failed&" +
+                        "skipped=$skipped"
+
+                val client = HttpClients.createDefault()
+                val post = HttpPost(url)
+
+                val response = client.execute(post)
+                val entity = response.entity
+
+                val statusCode = response.statusLine.statusCode
+                val responseBody = EntityUtils.toString(entity, "UTF-8")
+
+                println("RESPONSE: $statusCode")
+                println(responseBody)
             }
         }
     }
