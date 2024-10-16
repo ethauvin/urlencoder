@@ -24,9 +24,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
+    //jvmToolchain(11)
 
     applyDefaultHierarchyTemplate()
 
